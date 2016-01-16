@@ -19,7 +19,7 @@
 </p>
 
 <p>
-	Run: <code>java -jar target/java-blog-aggregator.war --spring.config.location=file:prod.properties --logging.config=file:logback-prod.xml</code>
+	Run: <code>java -jar target/java-blog-aggregator.jar --spring.config.location=file:prod.properties --logging.config=file:logback-prod.xml</code>
 </p>
 
 <h3>sample prod.properties contents:</h3>
