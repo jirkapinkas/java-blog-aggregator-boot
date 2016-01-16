@@ -4,7 +4,12 @@
 	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
 	lang="en">
 <head>
-	<th:block th:include="layout/header :: header-meta('')"></th:block>
+	<th:block th:switch="${blogDetail}">
+		<th:block th:case="${blogDetail eq true}">
+			<th:block th:include="layout/header :: header-meta(${blog.getPublicName()})"></th:block>
+		</th:block>
+		<th:block th:case="*" th:include="layout/header :: header-meta('')"></th:block>
+	</th:block>
 </head>
 <body>
 

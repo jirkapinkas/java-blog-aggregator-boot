@@ -29,6 +29,7 @@ public class NewsController {
 	@RequestMapping("/{shortName}")
 	public String showDetail(Model model, @PathVariable String shortName) {
 		model.addAttribute("news", newsService.findOne(shortName));
+		model.addAttribute("current", "news");
 		return "news-detail";
 	}
 
