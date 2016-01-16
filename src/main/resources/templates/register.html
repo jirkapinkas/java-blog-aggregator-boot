@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html 
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+	lang="en">
+<head>
+	<th:block th:include="layout/header :: header-meta('Register')"></th:block>
+</head>
+<body>
+
+<th:block th:include="layout/header :: navbar"></th:block>
+
+<div class="container">
+
+
+<form th:object="${user}" class="form-horizontal registrationForm" action="/register" method="post">
+
+	<div class="alert alert-info">
+		Didn't find your favourite blog? Register and submit a missing blog. 
+		Otherwise you don't have to register.
+	</div>
+
+	<div th:if="${param.success ne null and param.success[0] eq 'true'}" class="alert alert-success">Registration successfull!</div>
+
+	<div class="form-group">
+		<label for="name" class="col-sm-2 control-label">Name:</label>
+		<div class="col-sm-10">
+			<input type="text" th:field="*{name}" class="form-control" />
+			<span th:if="${#fields.hasErrors('name')}" th:errors="*{name}">error</span>
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="email" class="col-sm-2 control-label">Email:</label>
+		<div class="col-sm-10">
+			<input type="text" th:field="*{email}" class="form-control" />
+			<span th:if="${#fields.hasErrors('email')}" th:errors="*{email}">error</span>
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="password" class="col-sm-2 control-label">Password:</label>
+		<div class="col-sm-10">
+			<input type="password" th:field="*{password}" class="form-control" />
+			<span th:if="${#fields.hasErrors('password')}" th:errors="*{password}">error</span>
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="password" class="col-sm-2 control-label">Password again:</label>
+		<div class="col-sm-10">
+			<input type="password" name="password_again" id="password_again" class="form-control" />
+		</div>
+	</div>
+	<div class="form-group">
+		<div class="col-sm-2">
+			<input type="submit" value="Save" class="btn btn-lg btn-primary" />
+		</div>
+	</div>
+</form>
+
+
+<script type="text/javascript">
+$(document).ready(function() {
+	$(".registrationForm").validate(JBA.register.validate);
+});
+</script>
+
+<th:block th:include="layout/footer :: footer"></th:block>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html 
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+	lang="en">
+<head>
+	<th:block th:include="layout/header :: header-meta('')"></th:block>
+</head>
+<body>
+
+<th:block th:include="layout/header :: navbar"></th:block>
+
+<div class="container">
+
+<div th:if="${param.success ne null and param.success[0] eq 'true'}" class="alert alert-success">Saved!</div>
+
+<th:block sec:authorize="hasRole('ROLE_ADMIN')">
+	<img th:src="${'/spring/icon/' + blog.id}" style="float:left;padding-right:10px" />
+	
+	<form method="post" enctype="multipart/form-data" th:action="${'/admin/users/upload-icon/' + blog.id}">
+		<span class="btn btn-default btn-file">
+			Select icon (50 x 50 px) <input type="file" name="icon" />
+		</span>
+		<input type="submit" value="Upload" class="btn btn-primary" />
+	</form>
+	
+	<div style="clear:both"></div>
+	
+	<br /><br />
+</th:block>
+
+<form th:action="${'/blog-form?blogId=' + blog.id}" method="post" th:object="${blog}" class="form-horizontal blogForm">
+
+
+	<div class="form-group">
+		<label for="name" class="col-sm-2 control-label">Name:</label>
+		<div class="col-sm-10">
+			<input type="text" th:field="*{name}" class="form-control" />
+			<span th:if="${#fields.hasErrors('name')}" th:errors="*{name}">error</span>
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="shortName" class="col-sm-2 control-label">Short&nbsp;name:</label>
+		<div class="col-sm-10">
+			<input type="text" th:field="*{shortName}" class="form-control" />
+			<span th:if="${#fields.hasErrors('shortName')}" th:errors="*{shortName}">error</span>
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="nick" class="col-sm-2 control-label">Nick:</label>
+		<div class="col-sm-10">
+			<input type="text" th:field="*{nick}" class="form-control" />
+			<span th:if="${#fields.hasErrors('nick')}" th:errors="*{nick}">error</span>
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="url" class="col-sm-2 control-label">RSS&nbsp;/&nbsp;ATOM&nbsp;URL:</label>
+		<div class="col-sm-10">
+			<input type="text" th:field="*{url}" class="form-control" />
+			<span th:if="${#fields.hasErrors('url')}" th:errors="*{url}">error</span>
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="homepageUrl" class="col-sm-2 control-label">Homepage&nbsp;URL:</label>
+		<div class="col-sm-10">
+			<input type="text" th:field="*{homepageUrl}" class="form-control" />
+			<span th:if="${#fields.hasErrors('homepageUrl')}" th:errors="*{homepageUrl}">error</span>
+		</div>
+	</div>
+	<th:block sec:authorize="hasRole('ROLE_ADMIN')">
+		<div class="form-group">
+			<label for="aggregator" class="col-sm-2 control-label">Blog aggregator:</label>
+			<div class="col-sm-10">
+				<input type="checkbox" th:field="*{aggregator}" />
+			</div>
+		</div>
+	</th:block>
+
+	<input type="submit" class="btn btn-primary" value="Save" />
+
+</form>
+
+<th:block th:include="layout/footer :: footer"></th:block>
+
+</div>
+</body>
+</html>

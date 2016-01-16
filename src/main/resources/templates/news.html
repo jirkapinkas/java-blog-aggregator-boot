@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html 
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+	lang="en">
+<head>
+	<th:block th:include="layout/header :: header-meta('Login')"></th:block>
+</head>
+<body>
+
+<th:block th:include="layout/header :: navbar"></th:block>
+
+<div class="container">
+
+<h1 style="font-size: 25px">
+	<a href="/news/feed.xml" class="fa fa-rss fa-lg"  style="float:left;padding-right:5px;padding-top:8px;color:#333333;font-size:20px"></a>
+	Latest news from this website:
+</h1>
+
+<th:block th:utext="${configuration.googleAdsense}"></th:block>
+
+<th:block th:each="news : ${newsPage.content}">
+	<h3>
+		<th:block sec:authorize="hasRole('ROLE_ADMIN')">
+			<a th:href="${'/admin/news/edit/' + news.shortName}" class="btn btn-small btn-primary">edit</a>
+			<button onclick="JBA.news.remove(this)" th:id="${news.id}" class="btn btn-danger btn-small">delete</button>
+		</th:block>
+		<a th:href="${'/news/' + news.shortName}" th:text="${news.title}"></a>
+	</h3>
+	<div style="padding-bottom:10px;color:grey" th:text="${news.getFormattedPuslihedDate()}"></div>
+	<th:block th:text="${news.shortDescription}"></th:block>
+</th:block>
+
+<br /><hr />
+	
+<a th:if="${currPage lt (newsPage.totalPages - 1)}" th:href="${'?page=' + (currPage + 1)}">Older items</a>
+
+
+<th:block th:include="layout/footer :: footer"></th:block>
+
+</div>
+</body>
+</html>

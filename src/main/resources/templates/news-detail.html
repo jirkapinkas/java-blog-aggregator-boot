@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html 
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+	lang="en">
+<head>
+	<th:block th:include="layout/header :: header-meta('')"></th:block>
+</head>
+<body>
+
+<th:block th:include="layout/header :: navbar"></th:block>
+
+<div class="container">
+
+
+<h3>
+	<th:block sec:authorize="hasRole('ROLE_ADMIN')">
+		<a th:href="${'/admin/news/edit/' + news.shortName}" class="btn btn-small btn-primary">edit</a>
+	</th:block>
+	<th:block th:text="${news.title}"></th:block>
+</h3>
+
+<div style="padding-bottom:10px;color:grey">
+	<th:block th:text="${news.getFormattedPuslihedDate()}"></th:block>
+</div>
+
+
+<th:block th:utext="${configuration.googleAdsense}"></th:block>
+
+<br />
+
+<th:block th:utext="${news.description}"></th:block>
+
+<br /><br />
+
+<th:block th:utext="${configuration.disqusCode}"></th:block>
+
+<th:block th:utext="${configuration.newsSocialButtons}"></th:block>
+
+
+<th:block th:include="layout/footer :: footer"></th:block>
+
+</div>
+</body>
+</html>

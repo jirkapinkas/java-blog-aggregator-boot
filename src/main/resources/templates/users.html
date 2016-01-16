@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html 
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+	lang="en">
+<head>
+	<th:block th:include="layout/header :: header-meta('')"></th:block>
+</head>
+<body>
+
+<th:block th:include="layout/header :: navbar"></th:block>
+
+<div class="container">
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		$(".triggerRemove").click(JBA.users.remove);
+	});
+</script>
+
+<table class="table table-bordered table-hover table-striped">
+	<thead>
+		<tr>
+			<th>user name</th>
+			<th>roles</th>
+			<th>operations</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr th:each="user : ${users}">
+			<td>
+				<a th:href="${'/admin/users/' + user.id}" th:text="${user.name}"></a>
+			</td>
+			<td>
+				<th:block th:each="role : ${user.roles}">
+					<th:block th:text="${role.name}"></th:block>
+					<br/>
+				</th:block>
+			</td>
+			<td>
+				<button th:id="${user.id}" class="btn btn-danger triggerRemove">
+					remove
+				</button>
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+<th:block th:include="layout/footer :: footer"></th:block>
+
+</div>
+</body>
+</html>

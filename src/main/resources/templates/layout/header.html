@@ -1,0 +1,72 @@
+<th:block xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+
+	<th:block th:fragment="header-meta(title)">
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+		
+		<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css" />
+		<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" />
+		<link href="//cdn.datatables.net/1.10.5/css/jquery.dataTables.min.css" rel="stylesheet" />
+		<link rel="icon" href="/spring/icon/favicon" />
+		<link rel="apple-touch-icon" href="/spring/icon/appleTouchIcon" />
+		
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="title" th:content="${title}" />
+		
+		<title><th:block th:text="${configuration.title}"></th:block><th:block th:if="${title != ''}" th:text="' : ' + ${title}"></th:block></title>
+		
+		<link rel="alternate" type="application/rss+xml" title="News feed" href="/news/feed.xml" />
+		
+		<th:block th:utext="${configuration.googleAnalytics}"></th:block>
+	</th:block>
+
+	<th:block th:fragment="navbar">
+      <div class="navbar navbar-default navbar-static-top" role="navigation">
+        <div class="container">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" style="padding:10px" href="/">
+            	<img src="/spring/icon" alt="logo" />
+            	<th:block th:text="${configuration.brandName}"></th:block>
+            </a>
+          </div>
+          <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+
+              <th:block sec:authorize="hasRole('ROLE_ADMIN')">
+                <li class="dropdown">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Administer <span class="caret"></span></a>
+                  <ul class="dropdown-menu" role="menu">
+	              	<li th:class="${current == 'users' ? 'active' : ''}"><a href="/admin/users">Users</a></li>
+	              	<li th:class="${current == 'configuration' ? 'active' : ''}"><a href="/admin/configuration">Configuration</a></li>
+	              	<li th:class="${current == 'admin-detail' ? 'active' : ''}"><a href="/admin/detail">Admin detail</a></li>
+	              	<li th:class="${current == 'admin-categories' ? 'active' : ''}"><a href="/admin/categories">Categories</a></li>
+	                <li th:class="${current == 'news-form' ? 'active' : ''}"><a href="/admin/news/add">Add news</a></li>
+              	  </ul>
+              	</li>
+              </th:block>
+              <li th:class="${current == 'blogs' ? 'active' : ''}"><a href="/blogs">Blogs</a></li>
+	          <li th:class="${current == 'news' ? 'active' : ''}"><a href="/news">News</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+              <th:block sec:authorize="! isAuthenticated()">
+	              <li th:class="${current == 'login' ? 'active' : ''}"><a href="/login">Login</a></li>
+	              <li th:class="${current == 'register' ? 'active' : ''}"><a href="/register">Register</a></li>
+              </th:block>
+              <th:block sec:authorize="isAuthenticated()">
+              	<li th:class="${current == 'account' ? 'active' : ''}"><a href="/account">My account</a></li>
+              	<li><a href="/logout" th:text="${'Logout '}"></a></li>
+              </th:block>
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div><!--/.container-fluid -->
+      </div>
+	</th:block>
+
+</th:block>

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html 
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+	lang="en">
+<head>
+	<th:block th:include="layout/header :: header-meta('')"></th:block>
+</head>
+<body>
+
+<th:block th:include="layout/header :: navbar"></th:block>
+
+<div class="container">
+
+<!-- Button trigger modal -->
+<button class="btn btn-primary btn-lg triggerAdd">
+  New category
+</button>
+
+<form method="post" action="" th:object="${category}" class="form-horizontal categoryForm">
+	<input type="hidden" th:field="*{id}" />
+	<!-- Modal -->
+	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	        <h4 class="modal-title" id="myModalLabel">Category form</h4>
+	      </div>
+	      <div class="modal-body">
+	
+			<div class="form-group">
+				<label for="name" class="col-sm-3 control-label">Name:</label>
+				<div class="col-sm-9">
+					<input type="text" th:field="*{name}" class="form-control" />
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="name" class="col-sm-3 control-label">Short name:</label>
+				<div class="col-sm-9">
+					<input type="text" th:field="*{shortName}" class="form-control" />
+				</div>
+			</div>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+	        <input type="submit" class="btn btn-primary" value="Save" />
+	      </div>
+	    </div>
+	  </div>
+	</div>
+</form>
+
+<br /><br />
+
+<table class="table table-bordered table-hover table-striped">
+	<thead>
+		<tr>
+			<th>name</th>
+			<th>operations</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr th:each="category : ${categories}">
+			<td th:text="${category.name}"></td>
+			<td>
+				<button class="btn btn-danger triggerRemove" th:id="${category.id}">
+					remove
+				</button>
+				<button class="btn btn-primary triggerEdit" th:id="${category.id}">
+					edit
+				</button>
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+<script type="text/javascript">
+$(document).ready(function() {
+	$(".triggerRemove").click(JBA.adminCategories.remove);
+	$(".triggerEdit").click(JBA.adminCategories.edit);
+	$(".triggerAdd").click(JBA.adminCategories.add);
+});
+</script>
+
+<th:block th:include="layout/footer :: footer"></th:block>
+
+</div>
+</body>
+</html>

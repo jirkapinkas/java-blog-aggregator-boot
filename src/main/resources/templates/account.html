@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html 
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+	lang="en">
+<head>
+	<th:block th:include="layout/header :: header-meta('')"></th:block>
+</head>
+<body>
+
+<th:block th:include="layout/header :: navbar"></th:block>
+
+<div class="container">
+
+<button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">New blog</button>
+
+<br /><br />
+
+<div class="alert alert-info">Add only a blog, which isn't already
+	tracked. Your submission will be reviewed by an administrator and if
+	accepted, news from the blog will be displayed on front page. If not
+	accepted, the blog will be deleted.</div>
+
+<form action="/account" method="post" th:object="${blog}" class="form-horizontal blogForm">
+	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-hidden="true">&times;</button>
+					<h4 class="modal-title" id="myModalLabel">New blog</h4>
+				</div>
+				<div class="modal-body">
+
+					<div class="form-group">
+						<label for="name" class="col-sm-3 control-label">Name:</label>
+						<div class="col-sm-9">
+							<input type="text" th:field="*{name}" class="form-control" />
+							<span th:if="${#fields.hasErrors('name')}" th:errors="*{name}">error</span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="shortName" class="col-sm-3 control-label">Short&nbsp;name:</label>
+						<div class="col-sm-9">
+							<input type="text" th:field="*{shortName}" class="form-control" />
+							<span th:if="${#fields.hasErrors('shortName')}" th:errors="*{shortName}">error</span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="nick" class="col-sm-3 control-label">Nick:</label>
+						<div class="col-sm-9">
+							<input type="text" th:field="*{nick}" class="form-control" />
+							<span th:if="${#fields.hasErrors('nick')}" th:errors="*{nick}">error</span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="homepageUrl" class="col-sm-3 control-label">Homepage&nbsp;URL:</label>
+						<div class="col-sm-9">
+							<input type="text" th:field="*{homepageUrl}" class="form-control" />
+							<span th:if="${#fields.hasErrors('homepageUrl')}" th:errors="*{homepageUrl}">error</span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="url" class="col-sm-3 control-label">RSS&nbsp;/&nbsp;ATOM&nbsp;URL:</label>
+						<div class="col-sm-9">
+							<input type="text" th:field="*{url}" class="form-control" />
+							<span th:if="${#fields.hasErrors('url')}" th:errors="*{url}">error</span>
+						</div>
+					</div>
+					<th:block sec:authorize="hasRole('ROLE_ADMIN')">
+						<div class="form-group">
+							<label for="aggregator" class="col-sm-3 control-label">Aggregator:</label>
+							<div class="col-sm-9">
+								<input type="checkbox" th:field="*{aggregator}" />
+							</div>
+						</div>
+					</th:block>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					<input type="submit" class="btn btn-primary" value="Save" />
+				</div>
+			</div>
+		</div>
+	</div>
+</form>
+
+<br />
+<br />
+
+<script type="text/javascript">
+	$(document).ready( function() {
+		$(".blogForm").validate(JBA.account.validate);
+		$(".triggerRemove").click(JBA.account.remove);
+	});
+</script>
+
+
+<table class="table table-bordered table-striped table-hover">
+	<thead>
+		<tr>
+			<th>name</th>
+			<th>operations</th>
+			<th>accepted?</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr th:each="blog : ${user.blogs}">
+			<td>
+				<a th:href="${'blog/' + blog.shortName}" th:text="${blog.name}"></a>
+			</td>
+			<td>
+				<th:block th:text='${blog.category eq null ? "not yet reviewed" : "accepted"}' />
+			</td>
+			<td>
+				<a th:href="${'/blog-form?blogId=' + blog.id}" class="btn btn-primary">edit</a>
+				<button class="btn btn-danger triggerRemove" th:id="${blog.id}">remove</button>
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+<th:block th:include="layout/footer :: footer"></th:block>
+
+</div>
+</body>
+</html>

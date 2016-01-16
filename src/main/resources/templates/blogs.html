@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html 
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+	lang="en">
+<head>
+	<th:block th:include="layout/header :: header-meta('Login')"></th:block>
+</head>
+<body>
+
+<th:block th:include="layout/header :: navbar"></th:block>
+
+<div class="container">
+
+<th:block sec:authorize="hasRole('ROLE_ADMIN')">
+	<h3>Errors:</h3>
+	<ul>
+		<th:block th:each="blog : ${blogs}">
+			<li th:if="${blog.lastCheckStatus != null and not blog.lastCheckStatus}">
+				<th:block th:text="${'fail ' + blog.name + ' ' + blog.lastCheckErrorCount + ' times), error: ' + blog.lastCheckErrorText}" />
+			</li>
+		</th:block>
+	</ul>
+</th:block>
+
+<h1 style="font-size:25px">All blogs:</h1>
+
+<th:block th:utext="${configuration.googleAdsense}"></th:block>
+
+<br />
+
+<table class="table table-bordered table-hover table-striped display" id="dataTable">
+	<thead>
+		<tr>
+			<th>blog</th>
+			<th style="width:50px">popularity</th>
+			<th style="width:100px">category</th>
+			<th:block sec:authorize="hasRole('ROLE_ADMIN')">
+				<th>user</th>
+				<th>edit</th>
+			</th:block>
+			</tr>
+		</thead>
+	<tbody>
+		<tr th:each="blog : ${blogs}">
+			<td>
+				<img class="lazy" th:attr="data-src=${'/spring/icon/' + blog.id}" style="float:left;padding-right:5px" />
+				
+				<a th:href="${blog.homepageUrl}" class="fa fa-home fa-lg" style="float:left;padding-top:0px;color:grey"></a>
+				<a th:href="${blog.url}" class="fa fa-rss fa-lg"  style="float:left;padding-top:0px;padding-left:5px;color:grey"></a>
+				<br />
+
+				<a th:href="${'/blog/' + blog.shortName}">
+					<strong th:text="${blog.publicName}"></strong>
+				</a>
+			</td>
+			<td data-sort="${blog.popularity}">
+				<th:block th:include="layout/other :: popularity-badge(${blog.popularity})"></th:block>
+			</td>
+			<td>
+				<span class="label label-default" th:if="${blog.category != null}" th:text="${blog.category.name}"></span>
+			</td>
+			<th:block sec:authorize="hasRole('ROLE_ADMIN')">
+				<td>
+					<a th:href="${'/users/' + blog.user.id}" th:text="${blog.user.name}"></a>
+				</td>
+				<td>
+					<a th:href="${'/blog-form?blogId=' + blog.id}" class="btn btn-primary btn-xs">
+						edit
+					</a>
+					<button class="btn btn-danger btn-xs triggerRemove" th:id="${blog.id}" onclick="JBA.blogs.remove(this)">
+						 remove
+					</button>
+					
+					category:
+					<select class="categorySelect" th:id="${blog.id}" onchange="JBA.blogs.categorySelectChange(this)">
+						<option th:if="${blog.category eq null}" value="" selected="selected" disabled="disabled"></option>
+						<option th:each="category : ${categories}" 
+						        th:value="${category.id}" 
+						        th:text="${category.name}" 
+						        th:selected="${blog.category ne null and category.id eq blog.category.id}">
+						</option>
+					</select>
+				</td>
+			</th:block>
+		</tr>
+	</tbody>
+</table>
+
+<script type="text/javascript">
+$(document).ready(function() {
+    $("img.lazy").unveil(unveilTreshold);
+    $('#dataTable').DataTable( {
+		"fnDrawCallback": function( oSettings ) {
+			$("img.lazy").unveil(unveilTreshold);
+		}
+	});
+} );
+</script>
+
+<th:block th:include="layout/footer :: footer"></th:block>
+
+</div>
+</body>
+</html>

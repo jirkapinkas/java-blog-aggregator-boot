@@ -1,0 +1,41 @@
+<th:block xmlns:th="http://www.thymeleaf.org">
+
+<th:block th:fragment="popularity-badge(popularity)">
+	<th:block th:if="${popularity ge 30}">
+		<i class="fa fa-star" style="color:orange;"></i>
+		<i class="fa fa-star" style="color:orange;"></i>
+		<i class="fa fa-star" style="color:orange;"></i>
+		<i class="fa fa-star" style="color:orange;"></i>
+		<i class="fa fa-star" style="color:orange;"></i>
+	</th:block>
+	<th:block th:if="${popularity lt 30 and popularity ge 20}">
+		<i class="fa fa-star" style="color:orange;"></i>
+		<i class="fa fa-star" style="color:orange;"></i>
+		<i class="fa fa-star" style="color:orange;"></i>
+		<i class="fa fa-star" style="color:orange;"></i>
+		<i class="fa fa-star-o" style="color:orange;"></i>
+	</th:block>
+	<th:block th:if="${popularity lt 20 and popularity ge 15}">
+		<i class="fa fa-star" style="color:orange;"></i>
+		<i class="fa fa-star" style="color:orange;"></i>
+		<i class="fa fa-star" style="color:orange;"></i>
+		<i class="fa fa-star-o" style="color:orange;"></i>
+		<i class="fa fa-star-o" style="color:orange;"></i>
+	</th:block>
+	<th:block th:if="${popularity lt 15 and popularity ge 10}">
+		<i class="fa fa-star" style="color:orange;"></i>
+		<i class="fa fa-star" style="color:orange;"></i>
+		<i class="fa fa-star-o" style="color:orange;"></i>
+		<i class="fa fa-star-o" style="color:orange;"></i>
+		<i class="fa fa-star-o" style="color:orange;"></i>
+	</th:block>
+	<th:block th:if="${popularity lt 10}">
+		<i class="fa fa-star" style="color:orange;"></i>
+		<i class="fa fa-star-o" style="color:orange;"></i>
+		<i class="fa fa-star-o" style="color:orange;"></i>
+		<i class="fa fa-star-o" style="color:orange;"></i>
+		<i class="fa fa-star-o" style="color:orange;"></i>
+	</th:block>
+</th:block>
+
+</th:block>

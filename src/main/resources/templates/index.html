@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html 
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+	lang="en">
+<head>
+	<th:block th:include="layout/header :: header-meta('')"></th:block>
+</head>
+<body>
+
+<th:block th:include="layout/header :: navbar"></th:block>
+
+<div class="container">
+
+<th:block th:if="${blogDetail eq true}">
+	<table style="width:100%">
+		<tr>
+			<td style="width:42px">
+				<a th:href="${blog.homepageUrl}" class="fa fa-home fa-lg" style="float:left;padding-top:14px;color:#333333">
+				</a>
+				<a th:href="${blog.url}" class="fa fa-rss fa-lg"  style="float:left;padding-top:14px;padding-left:5px;color:#333333">
+				</a>
+			</td>
+			<td>
+				<h1 style="font-size:25px">
+					<th:block th:text="${title}"></th:block>
+					<span style="font-size:16px;">
+						<th:block th:include="layout/other :: popularity-badge(${blog.popularity})"></th:block>
+					</span>
+				</h1>
+			</td>
+		</tr>
+	</table>
+</th:block>
+
+<th:block th:utext="${configuration.googleAdsense}"></th:block>
+
+<br />
+
+<script type="text/javascript" th:inline="javascript">
+/*<![CDATA[*/
+	$(document).ready(function() {
+		var topViews = /*[[${topViews == true ? true : false}]]*/ 'topViews';
+		var max = /*[[${max == true ? true : false}]]*/ 'max';
+		var maxValue = /*[[${maxValue}]]*/ 'maxValue';
+		var blogDetail = /*[[${blogDetail == true ? true : false}]]*/ 'blogDetail';
+		var blogShortName = /*[[${blogShortName}]]*/ 'blogShortName';
+		var isAdmin = /*[[${#authorization.expression("hasRole('ROLE_ADMIN')")}]]*/ 'isAdmin';
+		var itemIds = /*[[${@indexController.getItemIds(items)}]]*/ 'itemIds';
+		
+		// set variables to JBA.index. This function must be called very early.
+		JBA.index.init(topViews, max, maxValue, blogDetail, blogShortName, isAdmin);
+
+		$(document).on("mouseenter", ".item-row", JBA.index.itemRowMouseIn);
+		$(document).on("mouseleave", ".item-row", JBA.index.itemRowMouseOut);
+		JBA.index.setSelectedCategories();
+
+		$(".categoryLabel").click(JBA.index.categoryLabelClick);
+
+		var filterFunc = function() {
+			var searchTxtValue = $(this).val();
+			searchTxt = searchTxtValue;
+			// reload first page
+			JBA.index.loadNextPage(null, true);
+		}
+		var debounced = $.debounce(300, filterFunc);
+		$(".searchInput").bind("keyup", debounced);
+		
+		$(".orderByLabel").click(JBA.index.orderByLabelClick);
+		
+		// show likes
+		for(i = 0; i < itemIds.length; i++) {
+			showCurrentState(itemIds[i]);
+		}
+		$("img.lazy").unveil(unveilTreshold);
+
+		$(".loadButton").click(JBA.index.loadNextPage);
+	});
+/*]]>*/
+</script>
+
+<table class="table table-bordered table-hover table-striped tableItems">
+	<tbody>
+		<tr>
+			<td>
+				<div class="form-inline">
+					<div class="form-group">
+						<div class="form-group" style="padding-bottom:5px">
+							<span class="label label-default" th:text="${blogCount + ' blogs'}"></span>
+							<span class="label label-default" th:text="${'updated: ' + lastIndexDate + ' min. ago'}"></span>
+							<th:block sec:authorize="hasRole('ROLE_ADMIN')">
+								<span class="label label-default" th:text="${'items: ' + itemCount}"></span>
+								<span class="label label-default" th:text="${'users: ' + userCount}"></span>
+								<span class="label label-default" th:text="${blogCountUnapproved + ' unapproved blogs'}"></span>
+							</th:block>
+						</div>
+						
+						<div class="form-group">
+							<label>show:</label>
+							<a href="" style="text-decoration:underline;font-weight:bold;" class="orderByLabel" id="latest">latest</a>
+							<a href="" class="orderByLabel" id="topWeek">top this week</a>
+							<a href="" class="orderByLabel" id="topMonth">top this month</a>
+						</div>
+						
+						<div class="form-group" th:if="${blogDetail eq null}">
+							<label>filter:</label>
+							<span th:each="category : ${categories}" class="label label-primary categoryLabel" th:id="${category.id}" style="cursor: pointer;" title="toggle category visibility" th:text="${category.name + ' (' + category.blogCount + ')'}"></span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="searchInputText">search:</label>
+						<input type="text" class="form-control searchInput" id="searchInputText" placeholder="filter news" />
+					</div>
+				</div>
+				
+			</td> 
+		</tr>
+
+		<th:block th:each="item : ${items}">
+			<tr class="item-row">
+				<td>
+					<div style="float:left">
+				
+						<a th:id="${item.id}" th:href="${item.link}" th:style="${item.enabled eq false ? 'text-decoration: line-through;color:grey' : ''}" class="itemLink" onClick="itemClick(event)" target="_blank">
+							<img class="lazy" th:attr="data-src=${'/spring/icon/' + item.blog.id}" style="float:left;padding-right:5px" />
+							<strong th:id="${item.id}" class="itemTitle">
+								<th:block th:text="${item.title}"></th:block>
+								<span class="glyphicon glyphicon-share-alt"></span>
+							</strong>
+						</a>
+					<br />
+
+					<span th:style="${item.enabled eq false ? 'text-decoration: line-through;color:grey' : ''}" class="itemDesc" th:text="${item.description}"></span>
+					<div style="padding-top:10px"></div>
+					<table style="float:left;margin-left:5px">
+						<tr>
+							<td style="padding:2px">
+								<i style="color:#6273a9;cursor:pointer;" 
+								   th:class="${'fa fa-thumbs-o-up fa-lg icon_like_' + item.id}" 
+								   th:id="${item.id}" 
+								   onclick="itemLike(event)"
+								   title="like"></i>
+							</td>
+							<td style="padding:2px">
+								<span th:class="${'likeCount_' + item.id}" th:text="${item.displayLikeCount}"></span>
+							</td>
+						</tr>
+					</table>
+					<i th:if="${item.savedDate > yesterdayDate}" class="fa fa-plus" title="today"></i>
+					<span class="label" style="color: grey;" th:text="${item.getSavedDateString()}"></span>
+					<span class="label label-info"><a th:href="${'/blog/' + item.blog.shortName}" style="color: white" th:text="${item.blog.publicName}"></a></span>
+					<span class="label label-default" th:if="${item.blog.category != null}" th:text="${item.blog.category.name}"></span>
+					<th:block sec:authorize="hasRole('ROLE_ADMIN')">
+						<span class="label label-default"><i class='fa fa-eye'></i> <th:block th:text="${item.clickCount}"></th:block></span>
+						<span class="label label-default"><i class='fa fa-thumbs-up'></i> <th:block th:text="${item.likeCount}"></th:block></span>
+						<span class="label label-default"><i class='fa fa-twitter'></i> <th:block th:text="${item.twitterRetweetCount}"></th:block></span>
+						<span class="label label-default"><i class='fa fa-facebook'></i> <th:block th:text="${item.facebookShareCount}"></th:block></span>
+						<span class="label label-default"><i class='fa fa-linkedin'></i> <th:block th:text="${item.linkedinShareCount}"></th:block></span>
+						<a th:href="${'/admin/items/toggle-enabled/' + item.id}" class="btn btn-primary btn-xs btnToggleEnabled" style="margin-left:5px" onclick="event.preventDefault();JBA.index.toggleEnabledItem(this);">
+							<th:block th:if="${item.enabled}">
+								disable
+							</th:block>
+							<th:block th:if="${not item.enabled}">
+								enable
+							</th:block>
+						</a>
+					</th:block>
+					
+					</div> <!-- end div style='float:left' -->
+					<div style="position:relative">
+					<div class="socialButtons" style="position:absolute;z-index:10;right:0"></div>
+					</div>
+				</td>
+			</tr>
+		</th:block>
+		<tr class="loadNextRow">
+			<td class="loadNextColumn">
+				<div style="text-align: center">
+					<strong>
+						<a th:if="${blogDetail == null or blogDetail eq false}" th:href="${'?page=' + nextPage}" class="loadButton">load next 10 items</a>
+						<a th:if="${blogDetail eq true}" th:href="${'?page=' + nextPage + '&amp;shortName=' + blogShortName}" class="loadButton">load next 10 items</a>
+					</strong>
+				</div>
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+<th:block th:utext="${configuration.googleAdsense}"></th:block>
+
+<th:block th:include="layout/footer :: footer"></th:block>
+
+</div>
+</body>
+</html>

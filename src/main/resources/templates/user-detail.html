@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html 
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+	lang="en">
+<head>
+	<th:block th:include="layout/header :: header-meta('')"></th:block>
+</head>
+<body>
+
+<th:block th:include="layout/header :: navbar"></th:block>
+
+<div class="container">
+
+<h1 th:text="${user.name}"></h1>
+
+<br /><br />
+
+<script type="text/javascript">
+$(document).ready(function() {
+	$('.nav-tabs a:first').tab('show'); // Select first tab
+});
+</script>
+
+<!-- Nav tabs -->
+<ul class="nav nav-tabs">
+  <li th:each="blog : ${user.blogs}"><a th:href="${'#blog_' + blog.id}" data-toggle="tab" th:text="${blog.name}"></a></li>
+</ul>
+
+<!-- Tab panes -->
+<div class="tab-content">
+  <div th:each="blog : ${user.blogs}" class="tab-pane" id="${'blog_' + blog.id}">
+
+	<br />
+	<p>Note: Only posts from last two months and max. 10 posts will be displayed.</p>
+
+	<table class="table table-bordered table-hover table-striped">
+		<thead>
+			<tr>
+				<th>Item</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:each="item : ${blog.items}">
+				<td>
+					<strong>
+						<a th:href="${item.link}" th:text="${item.title}"></a>
+					</strong>
+					<br />
+					<th:block th:text="${item.description}"></th:block>
+					<br />
+					<th:block th:text="${item.savedDate}"></th:block>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+  </div>
+</div>
+
+<th:block th:include="layout/footer :: footer"></th:block>
+
+</div>
+</body>
+</html>
