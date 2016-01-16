@@ -83,13 +83,13 @@ public class IndexController {
 		return selectedCategories;
 	}
 	
-	@RequestMapping("/index")
+	@RequestMapping("/")
 	public String index(Model model, HttpServletRequest request, @CookieValue(value = "selectedCategories", required = false) String selectedCategoriesString) {
 		model.addAttribute("title", configurationService.find().getHomepageHeading());
 		return showFirstPage(model, request, OrderType.LATEST, MaxType.UNDEFINED, selectedCategoriesString);
 	}
 
-	@RequestMapping(value = "/index", params = "page")
+	@RequestMapping(value = "/", params = "page")
 	public String index(Model model, @RequestParam int page, HttpServletRequest request, @CookieValue(required = false) String selectedCategoriesString) {
 		model.addAttribute("title", configurationService.find().getHomepageHeading());
 		return showPage(model, request, page, OrderType.LATEST, MaxType.UNDEFINED, selectedCategoriesString);
