@@ -41,7 +41,7 @@ public class NewsService {
 		newsItemRepository.save(newsItem);
 	}
 
-	public Page<NewsItem> findBlogs(int page) {
+	public Page<NewsItem> findNews(int page) {
 		return newsItemRepository.findAll(new PageRequest(page, PAGE_SIZE, Direction.DESC, "publishedDate"));
 	}
 	
@@ -60,7 +60,7 @@ public class NewsService {
 
 	public TRss getFeed() {
 		Configuration configuration = configurationService.find();
-		Page<NewsItem> firstTenNews = findBlogs(0);
+		Page<NewsItem> firstTenNews = findNews(0);
 		TRss rss = new TRss();
 		List<TRssItem> rssItems = new ArrayList<>();
 

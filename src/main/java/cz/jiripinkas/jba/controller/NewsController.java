@@ -1,13 +1,22 @@
 package cz.jiripinkas.jba.controller;
 
+import java.io.IOException;
+
+import javax.servlet.http.HttpServletResponse;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import cz.jiripinkas.jba.entity.NewsItem;
+import cz.jiripinkas.jba.exception.PageNotFoundException;
 import cz.jiripinkas.jba.rss.TRss;
 import cz.jiripinkas.jba.service.NewsService;
 
@@ -15,12 +24,19 @@ import cz.jiripinkas.jba.service.NewsService;
 @RequestMapping("/news")
 public class NewsController {
 	
+	private static final Logger log = LoggerFactory.getLogger(NewsController.class);
+	
 	@Autowired
 	private NewsService newsService;
 
+	@ExceptionHandler(PageNotFoundException.class)
+	public void pageNotFound(HttpServletResponse response) throws IOException {
+		response.sendError(HttpServletResponse.SC_NOT_FOUND);
+	}
+
 	@RequestMapping
-	public String showBlogs(Model model, @RequestParam(defaultValue = "0") int page) {
-		model.addAttribute("newsPage", newsService.findBlogs(page));
+	public String showNews(Model model, @RequestParam(defaultValue = "0") int page) {
+		model.addAttribute("newsPage", newsService.findNews(page));
 		model.addAttribute("currPage", page);
 		model.addAttribute("current", "news");
 		return "news";
@@ -28,7 +44,12 @@ public class NewsController {
 
 	@RequestMapping("/{shortName}")
 	public String showDetail(Model model, @PathVariable String shortName) {
-		model.addAttribute("news", newsService.findOne(shortName));
+		NewsItem newsItem = newsService.findOne(shortName);
+		if(newsItem == null) {
+			log.error("News not found: {}", shortName);
+			throw new PageNotFoundException();
+		}
+		model.addAttribute("news", newsItem);
 		model.addAttribute("current", "news");
 		return "news-detail";
 	}

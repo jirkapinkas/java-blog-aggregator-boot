@@ -39,6 +39,11 @@ public class IndexController {
 	@Autowired
 	private ConfigurationService configurationService;
 	
+	@RequestMapping("/404")
+	public String error404() {
+		return "404";
+	}
+
 	/**
 	 * This method is called from index.html to get all itemIds from list of Items
 	 * @return All itemIds from list of Items

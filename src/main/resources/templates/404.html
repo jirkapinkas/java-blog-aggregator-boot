@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html 
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+	lang="en">
+<head>
+	<th:block th:include="layout/header :: header-meta('Not Found (404)')"></th:block>
+
+	<style>
+	.image-blurred-edge {
+	    background-image: url('/resources/img/404.jpg');
+	    width: 359px;
+	    height: 299px;
+	    /* you need to match the shadow color to your background or image border for the desired effect*/
+	    box-shadow: 0 0 8px 8px white inset;
+	    margin-left: auto;
+	    margin-right: auto;
+	}
+	</style>
+
+</head>
+<body>
+
+<th:block th:include="layout/header :: navbar"></th:block>
+
+<div class="container">
+
+	<h1 style="text-align: center;">404 (NOT FOUND)</h1>
+
+	<br /><br />
+	<div class="image-blurred-edge"></div>
+	<br /><br />
+
+	<th:block th:include="layout/footer :: footer"></th:block>
+
+</div>
+</body>
+</html>

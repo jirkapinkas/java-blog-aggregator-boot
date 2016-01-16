@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import cz.jiripinkas.jba.entity.Blog;
 import cz.jiripinkas.jba.entity.Item;
 import cz.jiripinkas.jba.entity.User;
+import cz.jiripinkas.jba.exception.PageNotFoundException;
 import cz.jiripinkas.jba.repository.BlogRepository;
 import cz.jiripinkas.jba.repository.ItemRepository;
 import cz.jiripinkas.jba.repository.UserRepository;
@@ -146,7 +147,11 @@ public class BlogService {
 	@Cacheable("icons")
 	@Transactional
 	public byte[] getIcon(int blogId) throws IOException {
-		byte[] icon = blogRepository.findOne(blogId).getIcon();
+		Blog blog = blogRepository.findOne(blogId);
+		if(blog == null) {
+			throw new PageNotFoundException();
+		}
+		byte[] icon = blog.getIcon();
 		if (icon == null) {
 			return IOUtils.toByteArray(getClass().getResourceAsStream("/generic-blog.png"));
 		}

@@ -5,6 +5,8 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import cz.jiripinkas.jba.entity.Blog;
+import cz.jiripinkas.jba.exception.PageNotFoundException;
 import cz.jiripinkas.jba.service.BlogService;
 import cz.jiripinkas.jba.service.ItemService;
 import cz.jiripinkas.jba.service.ItemService.MaxType;
@@ -23,10 +26,8 @@ import cz.jiripinkas.jba.util.MyUtil;
 
 @Controller
 public class BlogController {
-
-	private static final class BlogNotFoundException extends RuntimeException {
-		private static final long serialVersionUID = 1L;
-	}
+	
+	private static final Logger log = LoggerFactory.getLogger(BlogController.class);
 
 	@Autowired
 	private ItemService itemService;
@@ -35,14 +36,15 @@ public class BlogController {
 	private BlogService blogService;
 
 	@ExceptionHandler
-	public void handleBlogNotFound(BlogNotFoundException exception, HttpServletResponse response) throws IOException {
+	public void handleBlogNotFound(PageNotFoundException exception, HttpServletResponse response) throws IOException {
 		response.sendError(HttpServletResponse.SC_NOT_FOUND);
 	}
 
 	private void findBlog(String shortName, Model model) {
 		Blog blog = blogService.findByShortName(shortName);
 		if (blog == null) {
-			throw new BlogNotFoundException();
+			log.error("Blog not found {}", shortName);
+			throw new PageNotFoundException();
 		}
 		model.addAttribute("title", "Blog: " + blog.getPublicName());
 		model.addAttribute("blogDetail", true);

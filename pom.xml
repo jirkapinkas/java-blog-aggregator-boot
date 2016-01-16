@@ -112,18 +112,15 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-thymeleaf</artifactId>
+			<exclusions>
+				<exclusion>
+					<artifactId>groovy</artifactId>
+					<groupId>org.codehaus.groovy</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 	</dependencies>
-
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
-		</plugins>
-	</build>
 
 	<profiles>
 
@@ -138,6 +135,14 @@
 					<artifactId>hsqldb</artifactId>
 				</dependency>
 			</dependencies>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.springframework.boot</groupId>
+						<artifactId>spring-boot-maven-plugin</artifactId>
+					</plugin>
+				</plugins>
+			</build>
 		</profile>
 
 		<profile>
@@ -151,12 +156,19 @@
 				<dependency>
 					<groupId>org.postgresql</groupId>
 					<artifactId>postgresql</artifactId>
-					<version>9.4.1207</version><!--$NO-MVN-MAN-VER$-->
+					<version>9.4.1207</version><!--$NO-MVN-MAN-VER$ -->
 				</dependency>
 			</dependencies>
 			<build>
 				<finalName>java-blog-aggregator</finalName>
 				<plugins>
+					<plugin>
+						<groupId>org.springframework.boot</groupId>
+						<artifactId>spring-boot-maven-plugin</artifactId>
+						<configuration>
+							<excludeArtifactIds>hsqldb</excludeArtifactIds>
+						</configuration>
+					</plugin>
 					<plugin>
 						<groupId>com.samaxes.maven</groupId>
 						<artifactId>minify-maven-plugin</artifactId>
