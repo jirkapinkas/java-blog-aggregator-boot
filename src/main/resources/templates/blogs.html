@@ -54,7 +54,7 @@
 					<strong th:text="${blog.publicName}"></strong>
 				</a>
 			</td>
-			<td data-sort="${blog.popularity}">
+			<td th:attr="data-sort=${blog.popularity}">
 				<th:block th:include="layout/other :: popularity-badge(${blog.popularity})"></th:block>
 			</td>
 			<td>
