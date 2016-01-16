@@ -166,6 +166,8 @@
 								<id>default-minify</id>
 								<configuration>
 									<charset>UTF-8</charset>
+									<webappSourceDir>${basedir}/src/main/resources/static</webappSourceDir>
+									<webappTargetDir>${project.build.directory}/classes/static</webappTargetDir>
 									<cssSourceDir>resources/css</cssSourceDir>
 									<cssSourceFiles>
 										<cssSourceFile>bootstrap-dialog.min.css</cssSourceFile>
