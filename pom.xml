@@ -173,7 +173,7 @@
 										<cssSourceFile>bootstrap-dialog.min.css</cssSourceFile>
 										<cssSourceFile>custom.css</cssSourceFile>
 									</cssSourceFiles>
-									<cssFinalFile>style.css</cssFinalFile>
+									<cssFinalFile>combined-styles.css</cssFinalFile>
 									<jsSourceDir>resources/js</jsSourceDir>
 									<jsSourceFiles>
 										<jsSourceFile>bootstrap-dialog.min.js</jsSourceFile>
@@ -189,7 +189,7 @@
 										<jsSourceFile>users.js</jsSourceFile>
 										<jsSourceFile>admin-categories.js</jsSourceFile>
 									</jsSourceFiles>
-									<jsFinalFile>script.js</jsFinalFile>
+									<jsFinalFile>combined-scripts.js</jsFinalFile>
 									<jsEngine>CLOSURE</jsEngine>
 								</configuration>
 								<goals>

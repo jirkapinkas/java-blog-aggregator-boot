@@ -12,8 +12,8 @@
 		<script type="text/javascript" src="/resources/prettyprint/run_prettify.js"></script>
 	
 		<th:block th:if="${@environment.acceptsProfiles('prod') eq true}">
-			<link rel="stylesheet" href="/css/combined-styles.min.css" />
-			<script src="/js/combined-scripts.min.js"></script>
+			<link rel="stylesheet" href="/resources/css/combined-styles.min.css" />
+			<script src="/resources/js/combined-scripts.min.js"></script>
 			<script type="text/javascript" src="/resources/js/ads.js"></script>
 		</th:block>
 		<th:block th:if="${@environment.acceptsProfiles('prod') eq false}">
