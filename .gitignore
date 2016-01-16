@@ -1,2 +1,6 @@
 /debug.log*
 /target/
+.settings
+.classpath
+.project
+.springBeans
