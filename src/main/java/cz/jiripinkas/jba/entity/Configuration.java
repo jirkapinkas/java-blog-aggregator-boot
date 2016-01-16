@@ -62,11 +62,11 @@ public class Configuration {
 	private byte[] icon;
 
 	@Lob
-	@Column(length = Integer.MAX_VALUE)
+	@Column(length = Integer.MAX_VALUE, updatable = false)
 	private byte[] favicon;
 
 	@Lob
-	@Column(length = Integer.MAX_VALUE, name = "apple_touch_icon")
+	@Column(length = Integer.MAX_VALUE, name = "apple_touch_icon", updatable = false)
 	private byte[] appleTouchIcon;
 
 	public byte[] getFavicon() {
