@@ -162,6 +162,10 @@ public class RssServiceTest {
 		assertEquals("Cyber technology couldn't", rssService.cleanDescription("Cyber technology couldn’t"));
 		assertEquals("return \"*\"?", rssService.cleanDescription("return “*”?"));
 		assertEquals("return \"*\"?", rssService.cleanDescription("return &#8220;*&#8221;?"));
+		assertEquals("At first glance", rssService.cleanDescription("Share this post: At first glance"));
+		assertEquals("At first glance", rssService.cleanDescription("Share this post: At first glance ...Read More"));
+		assertEquals("At first glance", rssService.cleanDescription("Share this post: At first glance Read More"));
+		assertEquals("At first glance, we get excited about lambdas. But soon, as we begin to program in Java 8, we begin to realize", rssService.cleanDescription("Share this post: At first glance, we get excited about lambdas. But soon, as we begin to program in Java 8, we begin to realize...<p class=\"readmore\"><a class=\"more-btn\" href=\"http://virtualjug.com/streams-the-real-powerhouse-in-java-8/\">Read More</a>"));
 	}
 
 	@Test

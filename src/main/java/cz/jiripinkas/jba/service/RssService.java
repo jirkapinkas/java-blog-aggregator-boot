@@ -389,6 +389,18 @@ public class RssService {
 			cleanDescription = cleanDescription.substring(8, cleanDescription.length());
 		}
 		
+		if(cleanDescription.startsWith("Share this post: ") && cleanDescription.length() > 18 && Character.isUpperCase(cleanDescription.charAt(17))) {
+			cleanDescription = cleanDescription.substring(17, cleanDescription.length());
+		}
+		
+		if(cleanDescription.endsWith("...Read More")) {
+			cleanDescription = cleanDescription.substring(0, cleanDescription.indexOf("...Read More"));
+		}
+		if(cleanDescription.endsWith("Read More")) {
+			cleanDescription = cleanDescription.substring(0, cleanDescription.indexOf("Read More"));
+		}
+		
+		
 		// fix for TL;DR
 		if(cleanDescription.startsWith("TLDR ") && cleanDescription.length() > 5) {
 			cleanDescription = cleanDescription.substring(5, cleanDescription.length());
