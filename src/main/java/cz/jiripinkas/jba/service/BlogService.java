@@ -88,7 +88,7 @@ public class BlogService {
 			}
 			blogResultService.saveOk(blog);
 		} catch (Exception e) {
-			log.warn("Exception downloading: " + blog.getUrl() + " message: " + e.getMessage());
+			log.warn("Error downloading: " + blog.getUrl() + " message: " + e.getMessage());
 			log.debug("Stacktrace", e);
 			errors.append(e.getMessage());
 		}

@@ -100,7 +100,7 @@ public class IndexController {
 	public List<ItemDto> getPageLatest(@PathVariable int page, HttpServletRequest request, @RequestParam Integer[] selectedCategories, @RequestParam(required = false) String search,
 			@RequestParam(required = false) String orderBy, @RequestParam(required = false) String shortName) {
 		if (search != null && !search.trim().isEmpty()) {
-			log.info("search for: " + search);
+			log.info("search for: {}", search);
 		}
 		boolean showAll = false;
 		if (request.isUserInRole("ADMIN")) {

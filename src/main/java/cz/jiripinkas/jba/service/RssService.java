@@ -154,7 +154,7 @@ public class RssService {
 			document = db.parse(new ByteArrayInputStream(page.getBytes(Charset.forName("UTF-8"))));
 			node = document.getDocumentElement();
 		} catch (Exception ex) {
-			log.warn("error parsing XML file: " + location);
+			log.error("Error parsing XML file: {}", location);
 			throw new RssException(ex.getMessage());
 		}
 
@@ -193,7 +193,7 @@ public class RssService {
 			}
 		} catch (Exception e) {
 			log.debug("Stacktrace", e);
-			log.error("Exception downloading real link: " + link);
+			log.error("Error downloading real link: {}", link);
 			throw new UrlException("Exception during downloading: " + link);
 		}
 		if (realLink != null) {
