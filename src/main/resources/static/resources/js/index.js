@@ -86,13 +86,13 @@ JBA.index.loadNextPage = function (e, clear) {
 	var url = "/page/" + nextPage;
 	var iconBaseUrl = "/spring/icon/";
 	var blogDetailBaseUrl = "/blog/";
-	if(this.topViews == true) {
+	if(JBA.index.topViews == true) {
 		url = url + "?topviews=true";
-		if(this.max == true) {
-			url = url + "&max=" + this.maxValue;
+		if(JBA.index.max == true) {
+			url = url + "&max=" + JBA.index.maxValue;
 		}
-	} else if(this.blogDetail == true) {
-		url = url + "?shortName=" + this.blogShortName;
+	} else if(JBA.index.blogDetail == true) {
+		url = url + "?shortName=" + JBA.index.blogShortName;
 	}
 	if(url.indexOf("?") == -1) {
 		url = url + "?selectedCategories=" + selectedCategories.join(',');
