@@ -1,4 +1,4 @@
-/debug.log*
+/debug*log
 /target/
 .settings
 .classpath
