@@ -8,7 +8,7 @@ JBA.blogs = {};
 JBA.blogs.categorySelectChange = function (element) {
 	var blogId = $(element).attr("id");
 	var categoryId = $(element).val();
-	$.post("admin-categories/set/" + blogId + "/cat/" + categoryId + ".json", function(data) { });
+	$.post("admin/categories/set/" + blogId + "/cat/" + categoryId + ".json", function(data) { });
 }
 
 JBA.blogs.remove = function (e) {
