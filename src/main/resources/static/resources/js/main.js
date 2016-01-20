@@ -32,7 +32,7 @@ function itemClick(e) {
 		// inside <a> is <img>, find closest <a>
 		itemId = $(e.target).closest("a").attr("id");
 	}
-	var url = qualifyURL("/") + "inc-count.html";
+	var url = qualifyURL("/") + "inc-count";
 	$.post(
 			url,
 			{ itemId: itemId },
@@ -101,7 +101,7 @@ function like(itemId) {
 	}
 	$(".icon_like_" + itemId).removeClass("fa-thumbs-o-up").addClass("fa-thumbs-up");
 	arrLikeProgress.push(itemId);
-	var url = qualifyURL("/") + "social/like.html";
+	var url = qualifyURL("/") + "social/like";
 	$.post(
 			url, 
 			{ itemId: itemId },
@@ -120,7 +120,7 @@ function unlike(itemId) {
 	}
 	$(".icon_like_" + itemId).removeClass("fa-thumbs-up").addClass("fa-thumbs-o-up");
 	arrLikeProgress.push(itemId);
-	var url = qualifyURL("/") + "social/unlike.html";
+	var url = qualifyURL("/") + "social/unlike";
 	$.post(
 			url, 
 			{ itemId: itemId },
@@ -138,7 +138,7 @@ function dislike(itemId) {
 	}
 	$(".icon_dislike_" + itemId).removeClass("fa-thumbs-o-down").addClass("fa-thumbs-down");
 	arrLikeProgress.push(itemId);
-	var url = qualifyURL("/") + "social/dislike.html";
+	var url = qualifyURL("/") + "social/dislike";
 	$.post(
 			url, 
 			{ itemId: itemId },
@@ -157,7 +157,7 @@ function undislike(itemId) {
 	}
 	$(".icon_dislike_" + itemId).removeClass("fa-thumbs-down").addClass("fa-thumbs-o-down");
 	arrLikeProgress.push(itemId);
-	var url = qualifyURL("/") + "social/undislike.html";
+	var url = qualifyURL("/") + "social/undislike";
 	$.post(
 			url, 
 			{ itemId: itemId },
