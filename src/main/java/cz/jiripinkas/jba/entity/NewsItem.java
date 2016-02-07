@@ -21,7 +21,7 @@ public class NewsItem {
 	@Column(length = 500)
 	private String title;
 
-	@Column(length = 500)
+	@Column(name = "short_description", length = 500)
 	private String shortDescription;
 
 	@Column(length = Integer.MAX_VALUE)

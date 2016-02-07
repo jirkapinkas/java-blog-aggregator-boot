@@ -45,16 +45,16 @@ public class Configuration {
 	@Column(name = "channel_description")
 	private String channelDescription;
 
-	@Column(name = "news_social_buttons", length = Integer.MAX_VALUE)
 	@Lob
+	@Column(name = "news_social_buttons", length = Integer.MAX_VALUE)
 	private String newsSocialButtons;
 
-	@Column(name = "disqus_code", length = Integer.MAX_VALUE)
 	@Lob
+	@Column(name = "disqus_code", length = Integer.MAX_VALUE)
 	private String disqusCode;
 
-	@Column(name = "twitter_oauth", length = Integer.MAX_VALUE)
 	@Lob
+	@Column(name = "twitter_oauth", length = Integer.MAX_VALUE)
 	private String twitterOauth;
 
 	@Lob
