@@ -113,7 +113,8 @@ JBA.index.loadNextPage = function (e, clear) {
 		}
 		var html = "";
 		$.each(data, function(key, value) {
-			html += "<tr class='item-row'><td>";
+			// set yellow background
+			html += "<tr class='item-row' style='background-color:#ffff99'><td>";
 			html += ' <div style="float:left">';
 
 			var css = "";
@@ -178,6 +179,10 @@ JBA.index.loadNextPage = function (e, clear) {
 			showCurrentState(value.id);
 			changedAnything = true;
 		});
+		// remove yellow background
+		setTimeout(function() {
+			$(".item-row").css("background-color", "");
+		}, 300);
 		finishRefresh(changedAnything);
 	});
 	currentPage++;
