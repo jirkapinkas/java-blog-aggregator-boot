@@ -151,10 +151,6 @@ JBA.index.loadNextPage = function (e, clear) {
 			html += ' </table>';
 
 			var date = new Date(value.savedDate);
-			if(date.getTime() > "${yesterdayDate.time}") {
-				html += '<i class="fa fa-plus" title="today"></i> ';
-			}
-
 			html += "<span class='label' style='color: grey;'>";
 			html += ("0" + date.getDate()).slice(-2) + "-" + ("0" + (date.getMonth() + 1)).slice(-2) + "-" + date.getFullYear();
 			html += " " + ("0" + date.getHours()).slice(-2) + ":" + ("0" + date.getMinutes()).slice(-2) + ":" + ("0" + date.getSeconds()).slice(-2);

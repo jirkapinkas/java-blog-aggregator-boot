@@ -151,7 +151,6 @@
 							</td>
 						</tr>
 					</table>
-					<i th:if="${item.savedDate > yesterdayDate}" class="fa fa-plus" title="today"></i>
 					<span class="label" style="color: grey;" th:text="${item.getSavedDateString()}"></span>
 					<span class="label label-info"><a th:href="${'/blog/' + item.blog.shortName}" style="color: white" th:text="${item.blog.publicName}"></a></span>
 					<span class="label label-default" th:if="${item.blog.category != null}" th:text="${item.blog.category.name}"></span>
