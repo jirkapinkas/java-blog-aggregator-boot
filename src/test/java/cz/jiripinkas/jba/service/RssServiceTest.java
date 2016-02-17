@@ -136,6 +136,7 @@ public class RssServiceTest {
 				"this is loooooooooooooooooooooooo ooooooooooooooooooooooooo ooooooong description loooooooooooooooooooooooo ooooooooong once more looooooooo...",
 				rssService
 						.cleanDescription("this is loooooooooooooooooooooooooooooooooooooooooooooooooooooooong description looooooooooooooooooooooooooooooooong once more looooooooooooooooooooooooooooooooong"));
+		assertEquals("JVM is an abbreviated form of Java Virtual Machine", rssService.cleanDescription("RSS from Javabeginnerstutorial.com JVM is an abbreviated form of Java Virtual Machine"));
 		assertEquals("test this is strong", rssService.cleanDescription("test <strong>this is strong</strong>"));
 		assertEquals("test this is strong", rssService.cleanDescription("test &lt;strong&gt;this is strong&lt;/strong&gt;"));
 		assertEquals("test this is strong", rssService.cleanDescription("<![CDATA[test &lt;strong&gt;this is strong&lt;/strong&gt;]]>"));

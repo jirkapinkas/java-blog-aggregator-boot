@@ -382,6 +382,7 @@ public class RssService {
 		cleanDescription = cleanDescription.replace("[Note from Pinal]:", "");
 		cleanDescription = cleanDescription.replace("[Notes from Pinal]:", "");
 		cleanDescription = cleanDescription.replace("[Additional]", "");
+		cleanDescription = cleanDescription.replace("RSS from Javabeginnerstutorial.com", "");
 		
 		// fix for Venkat Subramaniam
 		if(cleanDescription.startsWith("Tweet ") && cleanDescription.length() > 6 && Character.isUpperCase(cleanDescription.charAt(6))) {
