@@ -257,6 +257,7 @@ public class RssServiceTest {
 	
 	@Test
 	public void testFixRealLink() {
+		assertEquals("https://dzone.com/articles/defensive-programming-via-validating-decorators", rssService.fixRealLink("https://dzone.com/articles/defensive-programming-via-validating-decorators?utm_medium=feed&utm_source=feedpress.me&utm_campaign=Feed%3A+dzone%2Fjava"));
 		assertEquals("http://www.infoq.com/articles/Easily-Create-Java-Agents-with-ByteBuddy", rssService.fixRealLink("http://www.infoq.com/articles/Easily-Create-Java-Agents-with-ByteBuddy?utm_campaign=infoq_content&utm_source=infoq&utm_medium=feed&utm_term=Java"));
 		assertEquals("http://techblog.bozho.net/the-astonishingly-low-quality-of-scientific-code/", rssService.fixRealLink("http://techblog.bozho.net/the-astonishingly-low-quality-of-scientific-code/?utm_source=rss&utm_medium=rss&utm_campaign=the-astonishingly-low-quality-of-scientific-code"));
 	}

@@ -204,8 +204,11 @@ public class RssService {
 
 	protected String fixRealLink(String realLink) {
 		// fixes for stupid blogs
-		if (realLink.contains("?utm_campaign=infoq_content")) {
-			realLink = realLink.split("\\?utm_campaign=infoq_content")[0];
+		if (realLink.contains("?utm_campaign=")) {
+			realLink = realLink.split("\\?utm_campaign=")[0];
+		}
+		if (realLink.contains("?utm_medium=")) {
+			realLink = realLink.split("\\?utm_medium=")[0];
 		}
 		if (realLink.contains("?utm_source=rss")) {
 			realLink = realLink.split("\\?utm_source=rss")[0];
