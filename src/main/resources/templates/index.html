@@ -64,9 +64,15 @@
 
 		var filterFunc = function() {
 			var searchTxtValue = $(this).val();
-			searchTxt = searchTxtValue;
-			// reload first page
-			JBA.index.loadNextPage(null, true);
+			// something has changed in search box, so we need to reload the page
+			if(searchTxt !== searchTxtValue) {
+				console.log("searchTxt = " + searchTxt);
+				console.log("searchTxtValue = " + searchTxtValue);
+				
+				searchTxt = searchTxtValue;
+				// reload first page
+				JBA.index.loadNextPage(null, true);
+			}
 		}
 		var debounced = $.debounce(300, filterFunc);
 		$(".searchInput").bind("keyup", debounced);

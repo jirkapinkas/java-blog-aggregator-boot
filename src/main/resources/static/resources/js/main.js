@@ -9,7 +9,7 @@ var selectedCategories;
 
 var orderByCriteria = "latest";
 
-var searchTxt;
+var searchTxt = '';
 
 /*
  * clever way to get homepage in javascript, thanks to:
