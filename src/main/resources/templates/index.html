@@ -66,9 +66,6 @@
 			var searchTxtValue = $(this).val();
 			// something has changed in search box, so we need to reload the page
 			if(searchTxt !== searchTxtValue) {
-				console.log("searchTxt = " + searchTxt);
-				console.log("searchTxtValue = " + searchTxtValue);
-				
 				searchTxt = searchTxtValue;
 				// reload first page
 				JBA.index.loadNextPage(null, true);
