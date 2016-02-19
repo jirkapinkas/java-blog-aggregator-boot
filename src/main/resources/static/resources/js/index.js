@@ -111,10 +111,15 @@ JBA.index.loadNextPage = function (e, clear) {
 		if(clear) {
 			$(".tableItems tbody .item-row").remove();
 		}
+		// if we're not on first page, then set yellow background
+		setYellowBackground = currentPage !== 0;
 		var html = "";
 		$.each(data, function(key, value) {
-			// set yellow background
-			html += "<tr class='item-row' style='background-color:#ffff99'><td>";
+			html += "<tr class='item-row' style='";
+			if(setYellowBackground) {
+				html += "background-color:#ffff99";
+			}
+			html += "'><td>";
 			html += ' <div style="float:left">';
 
 			var css = "";
@@ -180,9 +185,11 @@ JBA.index.loadNextPage = function (e, clear) {
 			changedAnything = true;
 		});
 		// remove yellow background
-		setTimeout(function() {
-			$(".item-row").css("background-color", "");
-		}, 300);
+		if(setYellowBackground) {
+			setTimeout(function() {
+				$(".item-row").css("background-color", "");
+			}, 300);
+		}
 		finishRefresh(changedAnything);
 	});
 	currentPage++;
