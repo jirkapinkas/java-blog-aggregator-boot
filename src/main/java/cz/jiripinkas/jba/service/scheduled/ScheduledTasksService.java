@@ -145,23 +145,6 @@ public class ScheduledTasksService {
 		log.info("compute popularity end");
 	}
 
-	/**
-	 * Remove too old items without any clicks ... nobody will see them anyway.
-	 */
-	// one day = 60 * 60 * 24 * 1000
-	// @Scheduled(initialDelay = 60 * 60 * 12 * 1000, fixedDelay = 60 * 60 * 24
-	// * 1000)
-	// @CacheEvict(value = "itemCount", allEntries = true)
-	// public void cleanOldItems() {
-	// List<Item> items = itemRepository.findAll();
-	// for (Item item : items) {
-	// if (item.getClickCount() == 0 &&
-	// itemService.isTooOld(item.getPublishedDate())) {
-	// itemRepository.delete(item);
-	// }
-	// }
-	// }
-
 	int[] getPreviousWeekAndYear(Date date) throws ParseException {
 		Calendar calendar = new GregorianCalendar();
 		calendar.setTime(date);
@@ -184,7 +167,9 @@ public class ScheduledTasksService {
 	 * Generate best of weekly news
 	 */
 	@Transactional
-	@Scheduled(fixedDelay = 60 * 60 * 1000, initialDelay = 2000)
+//	@Scheduled(fixedDelay = 60 * 60 * 1000, initialDelay = 2000)
+	// Doesn't work well so I disabled it for the time being, in the future I might enable it again
+	@Deprecated
 	public void addWeeklyNews() throws ParseException {
 		final int[] weekAndYear = getPreviousWeekAndYear(new Date());
 		final int week = weekAndYear[0];
