@@ -82,7 +82,7 @@ public class BlogService {
 						blogResultService.saveLastIndexedDate(blog);
 						allLinksMap.put(item.getLink(), null);
 						// break this loop, so that only single item is saved.
-//						break;
+						break;
 					}
 				}
 			}
