@@ -236,7 +236,7 @@ public class RssService {
 					JsonNode data = item.get("data");
 					if(data.get("ups").asInt() >= blog.getMinRedditUps()) {
 						Item i = new Item();
-						i.setLink(data.get("url").asText());
+						i.setLink(getRealLink(data.get("url").asText(), HttpClientContext.create()));
 						i.setTitle(cleanTitle(data.get("title").asText()));
 						i.setDescription(cleanDescription(data.get("selftext").asText()));
 						i.setPublishedDate(new Date(data.get("created").asLong() * 1000));
