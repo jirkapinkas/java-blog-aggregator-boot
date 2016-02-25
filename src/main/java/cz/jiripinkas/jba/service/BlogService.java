@@ -57,7 +57,7 @@ public class BlogService {
 	public void saveItems(Blog blog, Map<String, Object> allLinksMap, Map<String, Object> allLowercaseTitlesMap) {
 		StringBuilder errors = new StringBuilder();
 		try {
-			List<Item> items = rssService.getItems(blog.getUrl(), blog.getId(), allLinksMap);
+			List<Item> items = rssService.getItems(blog.getUrl(), blog, allLinksMap);
 			for (Item item : items) {
 				if (item.getError() != null) {
 					errors.append(item.getError());
@@ -82,7 +82,7 @@ public class BlogService {
 						blogResultService.saveLastIndexedDate(blog);
 						allLinksMap.put(item.getLink(), null);
 						// break this loop, so that only single item is saved.
-						break;
+//						break;
 					}
 				}
 			}
@@ -127,6 +127,7 @@ public class BlogService {
 		managedBlog.setHomepageUrl(blog.getHomepageUrl());
 		managedBlog.setAggregator(blog.getAggregator());
 		managedBlog.setNick(blog.getNick());
+		managedBlog.setMinRedditUps(blog.getMinRedditUps());
 		blogRepository.save(managedBlog);
 	}
 

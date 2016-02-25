@@ -41,9 +41,13 @@ import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import cz.jiripinkas.jba.atom.Entry;
 import cz.jiripinkas.jba.atom.Feed;
 import cz.jiripinkas.jba.atom.Link;
+import cz.jiripinkas.jba.entity.Blog;
 import cz.jiripinkas.jba.entity.Item;
 import cz.jiripinkas.jba.exception.RssException;
 import cz.jiripinkas.jba.exception.UrlException;
@@ -78,8 +82,8 @@ public class RssService {
 		}
 	}
 
-	public List<Item> getItems(String location, int blogId, Map<String, Object> allLinksMap) throws RssException {
-		return getItems(location, false, blogId, allLinksMap);
+	public List<Item> getItems(String location, Blog blog, Map<String, Object> allLinksMap) throws RssException {
+		return getItems(location, false, blog, allLinksMap);
 	}
 
 	/**
@@ -128,12 +132,11 @@ public class RssService {
 		return get;
 	}
 
-	public List<Item> getItems(String location, boolean localFile, int blogId, Map<String, Object> allLinksMap) throws RssException {
+	public List<Item> getItems(String location, boolean localFile, Blog blog, Map<String, Object> allLinksMap) throws RssException {
 		Node node = null;
 		String page = null;
 
 		try {
-			Document document = null;
 			if (localFile) {
 				File file = new File(location);
 				page = FileUtils.readFileToString(file).trim();
@@ -151,7 +154,10 @@ public class RssService {
 				}
 			}
 			page = stripNonValidCharacters(page);
-			document = db.parse(new ByteArrayInputStream(page.getBytes(Charset.forName("UTF-8"))));
+			if (location.contains("reddit.com")) {
+				return getRedditItems(page, blog, allLinksMap);
+			}
+			Document document = db.parse(new ByteArrayInputStream(page.getBytes(Charset.forName("UTF-8"))));
 			node = document.getDocumentElement();
 		} catch (Exception ex) {
 			log.error("Error parsing XML file: {}", location);
@@ -159,9 +165,9 @@ public class RssService {
 		}
 
 		if ("rss".equals(node.getNodeName())) {
-			return getRssItems(new StringReader(page), blogId, allLinksMap);
+			return getRssItems(new StringReader(page), blog, allLinksMap);
 		} else if ("feed".equals(node.getNodeName())) {
-			return getAtomItems(new StringReader(page), blogId, allLinksMap);
+			return getAtomItems(new StringReader(page), blog, allLinksMap);
 		} else {
 			throw new RssException("unknown RSS type: " + location);
 		}
@@ -220,7 +226,35 @@ public class RssService {
 		return realLink;
 	}
 
-	private List<Item> getRssItems(Reader reader, int blogId, Map<String, Object> allLinksMap) throws RssException {
+	private List<Item> getRedditItems(String page, Blog blog, Map<String, Object> allLinksMap) throws RssException {
+		ArrayList<Item> list = new ArrayList<>();
+		try {
+			ObjectMapper mapper = new ObjectMapper();
+			JsonNode rootNode = mapper.readValue(page, JsonNode.class);
+			JsonNode items = rootNode.get("data").get("children");
+			for(JsonNode item : items) {
+					JsonNode data = item.get("data");
+					if(data.get("ups").asInt() >= blog.getMinRedditUps()) {
+						Item i = new Item();
+						i.setLink(data.get("url").asText());
+						i.setTitle(cleanTitle(data.get("title").asText()));
+						i.setDescription(cleanDescription(data.get("selftext").asText()));
+						i.setPublishedDate(new Date(data.get("created").asLong() * 1000));
+						if (allLinksMap.containsKey(i.getLink())) {
+							// skip this item, it's already in the database
+						} else {
+							list.add(i);
+						}
+					}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RssException(e);
+		}
+		return list;
+	}
+
+	private List<Item> getRssItems(Reader reader, Blog blog, Map<String, Object> allLinksMap) throws RssException {
 		ArrayList<Item> list = new ArrayList<>();
 		try {
 			TRss rss = (TRss) unmarshallerRss.unmarshal(reader);
@@ -267,7 +301,7 @@ public class RssService {
 		return list;
 	}
 
-	private List<Item> getAtomItems(Reader reader, int blogId, Map<String, Object> allLinksMap) throws RssException {
+	private List<Item> getAtomItems(Reader reader, Blog blog, Map<String, Object> allLinksMap) throws RssException {
 		ArrayList<Item> list = new ArrayList<>();
 		try {
 			Feed atom = (Feed) unmarshallerAtom.unmarshal(reader);

@@ -27,6 +27,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import cz.jiripinkas.jba.entity.Blog;
 import cz.jiripinkas.jba.entity.Item;
 import cz.jiripinkas.jba.exception.RssException;
 import cz.jiripinkas.jba.exception.UrlException;
@@ -51,7 +52,7 @@ public class RssServiceTest {
 	@Test
 	public void testGetItemsFileJavaVids() throws Exception {
 		mockHttpClient200Status();
-		List<Item> items = rssService.getItems("src/test/resources/test-rss/javavids.xml", true, 0, new HashMap<String, Object>());
+		List<Item> items = rssService.getItems("src/test/resources/test-rss/javavids.xml", true, null, new HashMap<String, Object>());
 		assertEquals(10, items.size());
 		Item firstItem = items.get(0);
 		assertEquals("How to generate web.xml in Eclipse", firstItem.getTitle());
@@ -61,7 +62,7 @@ public class RssServiceTest {
 	@Test
 	public void testGetItemsFileSpring() throws Exception {
 		mockHttpClient200Status();
-		List<Item> items = rssService.getItems("src/test/resources/test-rss/spring.xml", true, 0, new HashMap<String, Object>());
+		List<Item> items = rssService.getItems("src/test/resources/test-rss/spring.xml", true, null, new HashMap<String, Object>());
 		assertEquals(20, items.size());
 		Item firstItem = items.get(0);
 		assertEquals("Spring Boot 1.0.1.RELEASE Available Now", firstItem.getTitle());
@@ -75,7 +76,7 @@ public class RssServiceTest {
 	@Test
 	public void testGetItemsFileHibernate() throws Exception {
 		mockHttpClient200Status();
-		List<Item> items = rssService.getItems("src/test/resources/test-rss/hibernate.xml", true, 0, new HashMap<String, Object>());
+		List<Item> items = rssService.getItems("src/test/resources/test-rss/hibernate.xml", true, null, new HashMap<String, Object>());
 		assertEquals(14, items.size());
 		Item firstItem = items.get(0);
 		assertEquals("Third milestone on the path for Hibernate Search 5", firstItem.getTitle());
@@ -172,7 +173,7 @@ public class RssServiceTest {
 	@Test
 	public void testGetItemsFileInstanceofJavaPublishedDate() throws RssException, ClientProtocolException, IOException {
 		mockHttpClient200Status();
-		List<Item> items = rssService.getItems("src/test/resources/test-rss/instanceofjava.xml", true, 0, new HashMap<String, Object>());
+		List<Item> items = rssService.getItems("src/test/resources/test-rss/instanceofjava.xml", true, null, new HashMap<String, Object>());
 		Item firstItem = items.get(0);
 		assertEquals("22 02 2015 13:35:00", new SimpleDateFormat("dd MM yyyy HH:mm:ss").format(firstItem.getPublishedDate()));
 		assertEquals("http://www.instanceofjava.com/2015/02/java-8-interface-static-default-methods.html", firstItem.getLink());
@@ -181,9 +182,21 @@ public class RssServiceTest {
 	@Test
 	public void testGetItemsFileBaeldungFeedburnerOrigLink() throws Exception {
 		mockHttpClient200Status();
-		List<Item> items = rssService.getItems("src/test/resources/test-rss/baeldung.xml", true, 0, new HashMap<String, Object>());
+		List<Item> items = rssService.getItems("src/test/resources/test-rss/baeldung.xml", true, null, new HashMap<String, Object>());
 		Item firstItem = items.get(0);
 		assertEquals("http://www.baeldung.com/spring-security-oauth2-authentication-with-reddit", firstItem.getLink());
+	}
+
+	@Test
+	public void testGetItemsFileReddit() throws Exception {
+		mockHttpClient200Status();
+		Blog blog = new Blog();
+		blog.setMinRedditUps(30);
+		List<Item> items = rssService.getItems("src/test/resources/test-rss/reddit.com.json", true, blog, new HashMap<String, Object>());
+		assertEquals(4, items.size());
+		Item firstItem = items.get(0);
+		
+//		assertEquals("http://www.baeldung.com/spring-security-oauth2-authentication-with-reddit", firstItem.getLink());
 	}
 
 	@Test
@@ -244,7 +257,7 @@ public class RssServiceTest {
 	@Test
 	public void testAtomAlternate() throws Exception {
 		mockHttpClient200Status();
-		List<Item> items = rssService.getItems("src/test/resources/test-rss/knitelius.xml", true, 0, new HashMap<String, Object>());
+		List<Item> items = rssService.getItems("src/test/resources/test-rss/knitelius.xml", true, null, new HashMap<String, Object>());
 		Item firstItem = items.get(0);
 		assertEquals("http://www.knitelius.com/2015/03/03/jsf-2-ajaxsubmit-issues-with-conversationscoped-beans/", firstItem.getLink());
 	}
@@ -252,7 +265,7 @@ public class RssServiceTest {
 	@Test
 	public void testDfetter() throws Exception {
 		mockHttpClient200Status();
-		List<Item> items = rssService.getItems("src/test/resources/test-rss/dfetter.xml", true, 0, new HashMap<String, Object>());
+		List<Item> items = rssService.getItems("src/test/resources/test-rss/dfetter.xml", true, null, new HashMap<String, Object>());
 		assertEquals("What time was it? This is a question that may not always be easy to answer, even with the excellent TIMESTAMPTZ data type. While it stores t...", items.get(0).getDescription());
 	}
 	

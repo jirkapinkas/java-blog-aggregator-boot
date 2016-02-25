@@ -85,9 +85,20 @@ public class Blog {
 
 	private Boolean aggregator;
 
+	@Column(name = "min_reddit_ups")
+	private Integer minRedditUps;
+
 	@Column(updatable = false)
 	private Integer popularity;
-	
+
+	public Integer getMinRedditUps() {
+		return minRedditUps;
+	}
+
+	public void setMinRedditUps(Integer minRedditUps) {
+		this.minRedditUps = minRedditUps;
+	}
+
 	public Integer getPopularity() {
 		return popularity;
 	}

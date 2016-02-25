@@ -34,7 +34,9 @@ public class UserController {
 
 	@ModelAttribute("blog")
 	public Blog constructBlog() {
-		return new Blog();
+		Blog blog = new Blog();
+		blog.setMinRedditUps(0);
+		return blog;
 	}
 
 	@RequestMapping("/blog-form")
