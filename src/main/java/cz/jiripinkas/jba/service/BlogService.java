@@ -128,6 +128,7 @@ public class BlogService {
 		managedBlog.setAggregator(blog.getAggregator());
 		managedBlog.setNick(blog.getNick());
 		managedBlog.setMinRedditUps(blog.getMinRedditUps());
+		managedBlog.setArchived(blog.getArchived());
 		blogRepository.save(managedBlog);
 	}
 

@@ -29,9 +29,14 @@
 			<td>
 				<h1 style="font-size:25px">
 					<th:block th:text="${title}"></th:block>
-					<span style="font-size:16px;">
-						<th:block th:include="layout/other :: popularity-badge(${blog.popularity})"></th:block>
-					</span>
+					<th:block th:if="${blog.archived eq null or blog.archived eq false}">
+						<span style="font-size:16px;">
+							<th:block th:include="layout/other :: popularity-badge(${blog.popularity})"></th:block>
+						</span>
+					</th:block>
+					<th:block th:if="${blog.archived eq true}">
+						<span class="label label-default" style="font-size:10px;">archived</span>
+					</th:block>
 				</h1>
 			</td>
 		</tr>

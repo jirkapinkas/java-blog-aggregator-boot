@@ -56,7 +56,13 @@
 				</a>
 			</td>
 			<td th:attr="data-sort=${blog.popularity}">
-				<th:block th:include="layout/other :: popularity-badge(${blog.popularity})"></th:block>
+				<th:block th:if="${blog.archived eq true}">
+					<br />
+					<span class="label label-default">archived</span>
+				</th:block>
+				<th:block th:if="${blog.archived eq null or blog.archived eq false}">
+					<th:block th:include="layout/other :: popularity-badge(${blog.popularity})"></th:block>
+				</th:block>
 			</td>
 			<td>
 				<span class="label label-default" th:if="${blog.category != null}" th:text="${blog.category.name}"></span>

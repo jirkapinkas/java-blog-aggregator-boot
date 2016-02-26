@@ -100,8 +100,12 @@ public class ScheduledTasksService {
 			allLowercaseTitlesMap.put(title, null);
 		}
 		for (Blog blog : blogs) {
+			// reindex timeout must have passed in order to index this blog
 			if (reindexTimeoutPassed(blog.getLastIndexedDate())) {
-				blogService.saveItems(blog, allLinksMap, allLowercaseTitlesMap);
+				// archived blogs won't be indexed
+				if(blog.getArchived() == null || blog.getArchived() == false) {
+					blogService.saveItems(blog, allLinksMap, allLowercaseTitlesMap);
+				}
 			}
 		}
 		blogService.setLastIndexedDateFinish(new Date());

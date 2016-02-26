@@ -91,6 +91,16 @@ public class Blog {
 	@Column(updatable = false)
 	private Integer popularity;
 
+	private Boolean archived;
+
+	public Boolean getArchived() {
+		return archived;
+	}
+
+	public void setArchived(Boolean archived) {
+		this.archived = archived;
+	}
+
 	public Integer getMinRedditUps() {
 		return minRedditUps;
 	}
