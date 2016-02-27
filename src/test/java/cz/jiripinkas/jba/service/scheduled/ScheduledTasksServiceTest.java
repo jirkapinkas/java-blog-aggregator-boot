@@ -20,19 +20,27 @@ public class ScheduledTasksServiceTest {
 	}
 
 	@Test
-	public void shouldReturnLastWeekAndLastYear() throws ParseException {
+	public void shouldReturn_01_2015() throws ParseException {
 		Date firstDayOfYear = new Date(new SimpleDateFormat("dd.MM.yyyy").parse("01.01.2015").getTime());
-		int[] weekAndYear = scheduledTasksService.getPreviousWeekAndYear(firstDayOfYear);
-		Assert.assertEquals(52, weekAndYear[0]);
-		Assert.assertEquals(2014, weekAndYear[1]);
+		int[] weekAndYear = scheduledTasksService.getCurrentWeekAndYear(firstDayOfYear);
+		Assert.assertEquals(1, weekAndYear[0]);
+		Assert.assertEquals(2015, weekAndYear[1]);
 	}
 
 	@Test
-	public void shouldReturnPreviousWeek() throws ParseException {
+	public void shouldReturn_02_2015() throws ParseException {
 		Date firstDayOfYear = new Date(new SimpleDateFormat("dd.MM.yyyy").parse("08.01.2015").getTime());
-		int[] weekAndYear = scheduledTasksService.getPreviousWeekAndYear(firstDayOfYear);
-		Assert.assertEquals(1, weekAndYear[0]);
+		int[] weekAndYear = scheduledTasksService.getCurrentWeekAndYear(firstDayOfYear);
+		Assert.assertEquals(2, weekAndYear[0]);
 		Assert.assertEquals(2015, weekAndYear[1]);
+	}
+
+	@Test
+	public void shouldReturn_01_2016() throws ParseException {
+		Date firstDayOfYear = new Date(new SimpleDateFormat("dd.MM.yyyy").parse("01.01.2016").getTime());
+		int[] weekAndYear = scheduledTasksService.getCurrentWeekAndYear(firstDayOfYear);
+		Assert.assertEquals(1, weekAndYear[0]);
+		Assert.assertEquals(2016, weekAndYear[1]);
 	}
 
 	@Test

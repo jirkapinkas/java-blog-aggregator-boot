@@ -1,13 +1,15 @@
 package cz.jiripinkas.jba.service.scheduled;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.temporal.TemporalField;
+import java.time.temporal.WeekFields;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -149,21 +151,11 @@ public class ScheduledTasksService {
 		log.info("compute popularity end");
 	}
 
-	int[] getPreviousWeekAndYear(Date date) throws ParseException {
-		Calendar calendar = new GregorianCalendar();
-		calendar.setTime(date);
-		int week = calendar.get(Calendar.WEEK_OF_YEAR);
-		int year = calendar.get(Calendar.YEAR);
-		if (calendar.get(Calendar.WEEK_OF_YEAR) > 1) {
-			week = week - 1;
-		} else {
-			year = year - 1;
-			Calendar c = Calendar.getInstance();
-			c.setMinimalDaysInFirstWeek(7);
-			DateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-			c.setTime(sdf.parse("31/12/" + year));
-			week = c.get(Calendar.WEEK_OF_YEAR);
-		}
+	int[] getCurrentWeekAndYear(Date currentDate) {
+		LocalDate date = currentDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+		TemporalField woy = WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear(); 
+		int week = date.get(woy);
+		int year = date.getYear();
 		return new int[] { week, year };
 	}
 
@@ -171,11 +163,12 @@ public class ScheduledTasksService {
 	 * Generate best of weekly news
 	 */
 	@Transactional
-//	@Scheduled(fixedDelay = 60 * 60 * 1000, initialDelay = 2000)
-	// Doesn't work well so I disabled it for the time being, in the future I might enable it again
-	@Deprecated
-	public void addWeeklyNews() throws ParseException {
-		final int[] weekAndYear = getPreviousWeekAndYear(new Date());
+	// cron format: second, minute, hour, day of month, month and day of week
+	// should run every saturday at 7 A.M.
+	@Scheduled(cron = "0 0 7 * * SUN")
+	public void addWeeklyNews() {
+		log.info("add weekly news");
+		final int[] weekAndYear = getCurrentWeekAndYear(new Date());
 		final int week = weekAndYear[0];
 		final int year = weekAndYear[1];
 		String currentWeekShortTitle = "best-of-" + week + "-" + year;
