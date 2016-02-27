@@ -216,6 +216,9 @@ public class RssService {
 		if (realLink.contains("?utm_medium=")) {
 			realLink = realLink.split("\\?utm_medium=")[0];
 		}
+		if (realLink.contains("?utm_content=")) {
+			realLink = realLink.split("\\?utm_content=")[0];
+		}
 		if (realLink.contains("?utm_source=rss")) {
 			realLink = realLink.split("\\?utm_source=rss")[0];
 		}
