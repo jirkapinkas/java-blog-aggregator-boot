@@ -35,13 +35,15 @@ public class IconController {
 		response.sendError(HttpServletResponse.SC_NOT_FOUND);
 	}
 
+	@ResponseBody
 	@RequestMapping
-	public @ResponseBody byte[] getIcon() throws IOException {
+	public byte[] getIcon() throws IOException {
 		return configurationService.find().getIcon();
 	}
 
+	@ResponseBody
 	@RequestMapping(value = "/{blogId}")
-	public @ResponseBody byte[] getBlogIcon(@PathVariable int blogId) throws IOException {
+	public byte[] getBlogIcon(@PathVariable int blogId) throws IOException {
 		try {
 			return blogService.getIcon(blogId);
 		} catch (PageNotFoundException e) {
@@ -50,13 +52,15 @@ public class IconController {
 		}
 	}
 
+	@ResponseBody
 	@RequestMapping(value = "/favicon")
-	public @ResponseBody byte[] getFavicon() throws IOException {
+	public byte[] getFavicon() throws IOException {
 		return configurationService.find().getFavicon();
 	}
 
+	@ResponseBody
 	@RequestMapping(value = "/appleTouchIcon")
-	public @ResponseBody byte[] getAppleTouchIcon() throws IOException {
+	public byte[] getAppleTouchIcon() throws IOException {
 		return configurationService.find().getAppleTouchIcon();
 	}
 

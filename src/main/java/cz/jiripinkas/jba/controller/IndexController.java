@@ -1,6 +1,7 @@
 package cz.jiripinkas.jba.controller;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -84,13 +86,17 @@ public class IndexController {
 	}
 	
 	@RequestMapping("/")
-	public String index(Model model, HttpServletRequest request, @CookieValue(value = "selectedCategories", required = false) String selectedCategoriesString) {
+	public String index(Model model, HttpServletRequest request, @CookieValue(value = "selectedCategories", required = false) String selectedCategoriesString, @RequestHeader(value = "User-Agent", required = false) String userAgent) {
+		log.info("UA: {}", userAgent);
+		log.info("Navigated to homepage with selectedCategories: {}", selectedCategoriesString);
 		model.addAttribute("title", configurationService.find().getHomepageHeading());
 		return showFirstPage(model, request, OrderType.LATEST, MaxType.UNDEFINED, selectedCategoriesString);
 	}
 
 	@RequestMapping(value = "/", params = "page")
-	public String index(Model model, @RequestParam int page, HttpServletRequest request, @CookieValue(required = false) String selectedCategoriesString) {
+	public String index(Model model, @RequestParam int page, HttpServletRequest request, @CookieValue(required = false) String selectedCategoriesString, @RequestHeader(value = "User-Agent", required = false) String userAgent) {
+		log.info("UA: {}", userAgent);
+		log.info("Navigated to homepage with selectedCategories: {}, page: {}", selectedCategoriesString, page);
 		model.addAttribute("title", configurationService.find().getHomepageHeading());
 		return showPage(model, request, page, OrderType.LATEST, MaxType.UNDEFINED, selectedCategoriesString);
 	}
@@ -98,7 +104,9 @@ public class IndexController {
 	@ResponseBody
 	@RequestMapping("/page/{page}")
 	public List<ItemDto> getPageLatest(@PathVariable int page, HttpServletRequest request, @RequestParam Integer[] selectedCategories, @RequestParam(required = false) String search,
-			@RequestParam(required = false) String orderBy, @RequestParam(required = false) String shortName) {
+			@RequestParam(required = false) String orderBy, @RequestParam(required = false) String shortName, @RequestHeader(value = "User-Agent", required = false) String userAgent) {
+		log.info("UA: {}", userAgent);
+		log.info("Navigated to JSON, page {} with selectedCategories: {}", page, Arrays.asList(selectedCategories));
 		if (search != null && !search.trim().isEmpty()) {
 			log.info("search for: {}", search);
 		}
@@ -117,7 +125,9 @@ public class IndexController {
 
 	@ResponseBody
 	@RequestMapping(value = "/inc-count", method = RequestMethod.POST)
-	public String incItemCount(@RequestParam int itemId) {
+	public String incItemCount(@RequestParam int itemId, @RequestHeader(value = "User-Agent", required = false) String userAgent) {
+		log.info("UA: {}", userAgent);
+		log.info("Inc count to item with id: {}", itemId);
 		return Integer.toString(itemService.incCount(itemId));
 	}
 

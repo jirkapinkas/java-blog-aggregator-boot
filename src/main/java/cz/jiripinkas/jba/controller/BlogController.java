@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -53,7 +54,9 @@ public class BlogController {
 	}
 
 	@RequestMapping(value = "/blog/{shortName}")
-	public String blogDetail(Model model, HttpServletRequest request, @RequestParam(defaultValue = "0") Integer page, @PathVariable String shortName, @RequestParam(required = false) String orderBy) {
+	public String blogDetail(Model model, HttpServletRequest request, @RequestParam(defaultValue = "0") Integer page, @PathVariable String shortName, @RequestParam(required = false) String orderBy, @RequestHeader(value = "User-Agent", required = false) String userAgent) {
+		log.info("UA: {}", userAgent);
+		log.info("Navigated to blog: {}, page: {}", shortName, page);
 		findBlog(shortName, model);
 		return showPage(model, page, shortName, request, orderBy);
 	}
@@ -79,7 +82,9 @@ public class BlogController {
 	}
 
 	@RequestMapping("/blogs")
-	public String showBlogs(Model model, HttpServletRequest request) {
+	public String showBlogs(Model model, HttpServletRequest request, @RequestHeader(value = "User-Agent", required = false) String userAgent) {
+		log.info("UA: {}", userAgent);
+		log.info("Navigated to blogs list");
 		boolean showAll = false;
 		if (request.isUserInRole("ADMIN")) {
 			showAll = true;
