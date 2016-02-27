@@ -436,6 +436,9 @@ public class RssService {
 		if(cleanDescription.startsWith("Share this post: ") && cleanDescription.length() > 18 && Character.isUpperCase(cleanDescription.charAt(17))) {
 			cleanDescription = cleanDescription.substring(17, cleanDescription.length());
 		}
+		if(cleanDescription.startsWith("RSS content ") && cleanDescription.length() > 12 && Character.isUpperCase(cleanDescription.charAt(12))) {
+			cleanDescription = cleanDescription.substring(12, cleanDescription.length());
+		}
 		
 		if(cleanDescription.endsWith("...Read More")) {
 			cleanDescription = cleanDescription.substring(0, cleanDescription.indexOf("...Read More"));
