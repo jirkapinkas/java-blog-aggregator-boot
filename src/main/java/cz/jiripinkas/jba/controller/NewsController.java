@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -43,7 +44,9 @@ public class NewsController {
 	}
 
 	@RequestMapping("/{shortName}")
-	public String showDetail(Model model, @PathVariable String shortName) {
+	public String showDetail(Model model, @PathVariable String shortName, @RequestHeader(value = "User-Agent", required = false) String userAgent) {
+		log.info("UA: {}", userAgent);
+		log.info("Navigated to news: {}", shortName);
 		NewsItem newsItem = newsService.findOne(shortName);
 		if(newsItem == null) {
 			log.error("News not found: {}", shortName);
@@ -56,7 +59,9 @@ public class NewsController {
 
 	@ResponseBody
 	@RequestMapping("/feed")
-	public TRss rss() {
+	public TRss rss(@RequestHeader(value = "User-Agent", required = false) String userAgent) {
+		log.info("UA: {}", userAgent);
+		log.info("Navigated to rss feed");
 		return newsService.getFeed();
 	}
 
