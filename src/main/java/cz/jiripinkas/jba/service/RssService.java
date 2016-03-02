@@ -175,6 +175,7 @@ public class RssService {
 
 	protected String getRealLink(String link, HttpClientContext context) throws UrlException {
 		link = link.trim();
+		link = link.replace("&amp;", "&");
 		String realLink = null;
 		try {
 			HttpGet get = constructGet(link);

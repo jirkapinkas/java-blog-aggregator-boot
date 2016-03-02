@@ -242,6 +242,13 @@ public class RssServiceTest {
 	}
 
 	@Test
+	public void test200Ampersand() throws Exception {
+		mockHttpClient200Status();
+		String realLink = rssService.getRealLink("http://www.phoronix.com/scan.php?page=news_item&amp;px=LWJGL-Vulkan-Java", HttpClientContext.create());
+		assertEquals("http://www.phoronix.com/scan.php?page=news_item&px=LWJGL-Vulkan-Java", realLink);
+	}
+
+	@Test
 	public void test200() throws Exception {
 		mockHttpClient200Status();
 		String realLink = rssService.getRealLink("http://www.java-skoleni.cz", HttpClientContext.create());
