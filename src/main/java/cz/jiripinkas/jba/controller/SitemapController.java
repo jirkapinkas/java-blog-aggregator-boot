@@ -12,7 +12,7 @@ import cz.jiripinkas.jba.service.BlogService;
 import cz.jiripinkas.jba.service.ConfigurationService;
 import cz.jiripinkas.jba.service.NewsService;
 import cz.jiripinkas.jsitemapgenerator.WebPage;
-import cz.jiripinkas.jsitemapgenerator.WebSitemapGenerator;
+import cz.jiripinkas.jsitemapgenerator.generator.SitemapGenerator;
 
 @Controller
 public class SitemapController {
@@ -45,17 +45,17 @@ public class SitemapController {
 	@RequestMapping("/sitemap")
 	public String getSitemap() {
 		Configuration configuration = configurationService.find();
-		WebSitemapGenerator webSitemapGenerator = new WebSitemapGenerator(configuration.getChannelLink());
-		webSitemapGenerator.addPage(new WebPage().setName(""));
-		webSitemapGenerator.addPage(new WebPage().setName("blogs"));
-		webSitemapGenerator.addPage(new WebPage().setName("news"));
+		SitemapGenerator sitemapGenerator = new SitemapGenerator(configuration.getChannelLink());
+		sitemapGenerator.addPage(new WebPage().setName(""));
+		sitemapGenerator.addPage(new WebPage().setName("blogs"));
+		sitemapGenerator.addPage(new WebPage().setName("news"));
 		for (Blog blog : blogService.findAll(false)) {
-			webSitemapGenerator.addPage(new WebPage().setName("blog/" + blog.getShortName()));
+			sitemapGenerator.addPage(new WebPage().setName("blog/" + blog.getShortName()));
 		}
 		for (NewsItem newsItem : newsService.findAll()) {
-			webSitemapGenerator.addPage(new WebPage().setName("news/" + newsItem.getShortName()));
+			sitemapGenerator.addPage(new WebPage().setName("news/" + newsItem.getShortName()));
 		}
-		return webSitemapGenerator.constructSitemapString();
+		return sitemapGenerator.constructSitemapString();
 	}
 
 }

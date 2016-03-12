@@ -1,11 +1,7 @@
 package cz.jiripinkas.jba.service;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -17,10 +13,9 @@ import org.springframework.transaction.annotation.Transactional;
 import cz.jiripinkas.jba.entity.Configuration;
 import cz.jiripinkas.jba.entity.NewsItem;
 import cz.jiripinkas.jba.repository.NewsItemRepository;
-import cz.jiripinkas.jba.rss.TRss;
-import cz.jiripinkas.jba.rss.TRssChannel;
-import cz.jiripinkas.jba.rss.TRssItem;
 import cz.jiripinkas.jba.util.MyUtil;
+import cz.jiripinkas.jsitemapgenerator.RssItemBuilder;
+import cz.jiripinkas.jsitemapgenerator.generator.RssGenerator;
 
 @Service
 public class NewsService {
@@ -54,35 +49,21 @@ public class NewsService {
 		return newsItemRepository.findByShortName(shortName);
 	}
 
-	public String dateToString(Date date) {
-		return new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss Z", Locale.ENGLISH).format(date);
-	}
-
-	public TRss getFeed() {
+	public String getFeed() {
 		Configuration configuration = configurationService.find();
 		Page<NewsItem> firstTenNews = findNews(0);
-		TRss rss = new TRss();
-		List<TRssItem> rssItems = new ArrayList<>();
-
+		RssGenerator rssGenerator = new RssGenerator(configuration.getChannelLink(), configuration.getChannelTitle(), configuration.getChannelDescription());
 		for (NewsItem newsItem : firstTenNews.getContent()) {
-			TRssItem rssItem = new TRssItem();
-			rssItem.setTitle(newsItem.getTitle());
-			rssItem.setDescription(newsItem.getShortDescription());
-			rssItem.setLink(configuration.getChannelLink() + "/news/" + newsItem.getShortName());
-			rssItem.setPubDate(dateToString(newsItem.getPublishedDate()));
-			rssItems.add(rssItem);
+			rssGenerator.addPage(
+					new RssItemBuilder()
+					.title(newsItem.getTitle())
+					.description(newsItem.getShortDescription())
+					.name("news/" + newsItem.getShortName())
+					.pubDate(newsItem.getPublishedDate())
+					.build()
+					);
 		}
-
-		TRssChannel rssChannel = new TRssChannel();
-		rssChannel.setTitle(configuration.getChannelTitle());
-		rssChannel.setDescription(configuration.getChannelDescription());
-		rssChannel.setLink(configuration.getChannelLink());
-		if (firstTenNews.getContent().size() > 0) {
-			rssChannel.setLastBuildDate(dateToString(firstTenNews.getContent().get(0).getPublishedDate()));
-		}
-		rssChannel.setItems(rssItems);
-		rss.setChannels(Arrays.asList(new TRssChannel[] { rssChannel }));
-		return rss;
+		return rssGenerator.constructRss();
 	}
 
 	public void delete(int id) {

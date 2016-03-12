@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import cz.jiripinkas.jba.entity.NewsItem;
 import cz.jiripinkas.jba.exception.PageNotFoundException;
-import cz.jiripinkas.jba.rss.TRss;
 import cz.jiripinkas.jba.service.NewsService;
 
 @Controller
@@ -61,7 +60,7 @@ public class NewsController {
 
 	@ResponseBody
 	@RequestMapping("/feed")
-	public TRss rss(@RequestHeader(value = "User-Agent", required = false) String userAgent) {
+	public String rss(@RequestHeader(value = "User-Agent", required = false) String userAgent) {
 		log.info("UA: {}", userAgent);
 		log.info("Navigated to rss feed");
 		return newsService.getFeed();
