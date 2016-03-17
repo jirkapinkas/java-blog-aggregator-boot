@@ -70,6 +70,14 @@ public class BlogService {
 					if (allLinksMap.containsKey(item.getLink())) {
 						duplicate = true;
 					}
+					// maybe the link is already in the database with https:// ?
+					if (allLinksMap.containsKey(item.getLink().replace("http://", "https://"))) {
+						duplicate = true;
+					}
+					// maybe the link is already in the database with http:// ?
+					if (allLinksMap.containsKey(item.getLink().replace("https://", "http://"))) {
+						duplicate = true;
+					}
 					if (Boolean.TRUE.equals(blog.getAggregator())
 							&& allLowercaseTitlesMap.containsKey(item.getTitle().toLowerCase())) {
 						duplicate = true;
