@@ -382,8 +382,20 @@ public class RssService {
 							try {
 								return new SimpleDateFormat("yyyy.MM.dd", Locale.ENGLISH).parse(stringDate);
 							} catch (ParseException e6) {
-								stringDate = stringDate.replace("Sept", "Sep");
-								return new SimpleDateFormat("MMM dd, yyyy HH:mm:ss a Z", Locale.ENGLISH).parse(stringDate);
+								try {
+									stringDate = stringDate.replace("Sept", "Sep");
+									return new SimpleDateFormat("MMM dd, yyyy HH:mm:ss a Z", Locale.ENGLISH).parse(stringDate);
+								} catch (ParseException e7) {
+									try {
+										return new SimpleDateFormat("EEE, MMM dd, yyyy HH:mm:ss a Z", Locale.ENGLISH).parse(stringDate);
+									} catch (ParseException e8) {
+										try {
+											return new SimpleDateFormat("EEE, MMM dd, yyyy HH:mm:ss Z", Locale.ENGLISH).parse(stringDate);
+										} catch (ParseException e9) {
+											return new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss Z", Locale.ENGLISH).parse(stringDate);
+										}
+									}
+								}
 							}
 						}
 					}
