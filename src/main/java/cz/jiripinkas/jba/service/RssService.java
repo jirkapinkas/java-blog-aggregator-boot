@@ -382,6 +382,7 @@ public class RssService {
 							try {
 								return new SimpleDateFormat("yyyy.MM.dd", Locale.ENGLISH).parse(stringDate);
 							} catch (ParseException e6) {
+								stringDate = stringDate.replace("Sept", "Sep");
 								return new SimpleDateFormat("MMM dd, yyyy HH:mm:ss a Z", Locale.ENGLISH).parse(stringDate);
 							}
 						}

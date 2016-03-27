@@ -124,6 +124,7 @@ public class RssServiceTest {
 		assertEquals("Sun Jan 25 21:00:00 CET 2015", rssService.getRssDate("25 Jan 2015 20:00:00 GMT").toString());
 		assertEquals("Sun Mar 18 00:00:00 CET 2012", rssService.getRssDate("2012.03.18").toString());
 		assertEquals("Thu Mar 24 15:57:00 CET 2016", rssService.getRssDate("Mar 24, 2016 9:57:00 am EST").toString());
+		assertEquals("Sat Sep 24 16:57:00 CEST 2016", rssService.getRssDate("Sept 24, 2016 9:57:00 am EST").toString());
 	}
 
 	@Test
