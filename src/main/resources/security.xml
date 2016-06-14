@@ -6,6 +6,14 @@
            http://www.springframework.org/schema/security
            http://www.springframework.org/schema/security/spring-security.xsd">
 
+	<!-- optimize caching for static resources -->
+    <http pattern="/resources/**">
+    	<intercept-url pattern="/**" access="permitAll" />
+    	<anonymous/>
+    	<http-basic/>
+    	<headers disabled="true"></headers>
+    </http>
+
 	<global-method-security pre-post-annotations="enabled" />
 
 	<http use-expressions="true">
