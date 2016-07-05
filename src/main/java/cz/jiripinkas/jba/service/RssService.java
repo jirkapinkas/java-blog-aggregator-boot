@@ -364,6 +364,7 @@ public class RssService {
 	}
 
 	public Date getRssDate(String stringDate) throws ParseException {
+		stringDate = stringDate.trim();
 		try {
 			return new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss Z", Locale.ENGLISH).parse(stringDate);
 		} catch (ParseException e) {
