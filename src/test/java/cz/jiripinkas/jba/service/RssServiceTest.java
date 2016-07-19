@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.TimeZone;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.StatusLine;
@@ -56,7 +57,9 @@ public class RssServiceTest {
 		assertEquals(10, items.size());
 		Item firstItem = items.get(0);
 		assertEquals("How to generate web.xml in Eclipse", firstItem.getTitle());
-		assertEquals("23 03 2014 09:01:34", new SimpleDateFormat("dd MM yyyy HH:mm:ss").format(firstItem.getPublishedDate()));
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd MM yyyy HH:mm:ss");
+		simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT+1"));
+		assertEquals("23 03 2014 09:01:34", simpleDateFormat.format(firstItem.getPublishedDate()));
 	}
 
 	@Test
@@ -67,7 +70,9 @@ public class RssServiceTest {
 		Item firstItem = items.get(0);
 		assertEquals("Spring Boot 1.0.1.RELEASE Available Now", firstItem.getTitle());
 		assertEquals("https://spring.io/blog/2014/04/07/spring-boot-1-0-1-release-available-now", firstItem.getLink());
-		assertEquals("07 04 2014 10:14:00", new SimpleDateFormat("dd MM yyyy HH:mm:ss").format(firstItem.getPublishedDate()));
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd MM yyyy HH:mm:ss");
+		simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT+1"));
+		assertEquals("07 04 2014 09:14:00", simpleDateFormat.format(firstItem.getPublishedDate()));
 		if (!firstItem.getDescription().startsWith("Spring Boot 1.0.1.RELEASE is available")) {
 			fail("description does not match");
 		}
@@ -81,7 +86,9 @@ public class RssServiceTest {
 		Item firstItem = items.get(0);
 		assertEquals("Third milestone on the path for Hibernate Search 5", firstItem.getTitle());
 		assertEquals("http://in.relation.to/Bloggers/ThirdMilestoneOnThePathForHibernateSearch5", firstItem.getLink());
-		assertEquals("04 04 2014 17:20:32", new SimpleDateFormat("dd MM yyyy HH:mm:ss").format(firstItem.getPublishedDate()));
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd MM yyyy HH:mm:ss");
+		simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT+1"));
+		assertEquals("04 04 2014 16:20:32", simpleDateFormat.format(firstItem.getPublishedDate()));
 		if (!firstItem.getDescription().startsWith("Version 5.0.0.Alpha3 is now available")) {
 			fail("description does not match");
 		}
@@ -182,7 +189,9 @@ public class RssServiceTest {
 		mockHttpClient200Status();
 		List<Item> items = rssService.getItems("src/test/resources/test-rss/instanceofjava.xml", true, null, new HashMap<String, Object>());
 		Item firstItem = items.get(0);
-		assertEquals("22 02 2015 13:35:00", new SimpleDateFormat("dd MM yyyy HH:mm:ss").format(firstItem.getPublishedDate()));
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd MM yyyy HH:mm:ss");
+		simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT+1"));
+		assertEquals("22 02 2015 13:35:00", simpleDateFormat.format(firstItem.getPublishedDate()));
 		assertEquals("http://www.instanceofjava.com/2015/02/java-8-interface-static-default-methods.html", firstItem.getLink());
 	}
 
