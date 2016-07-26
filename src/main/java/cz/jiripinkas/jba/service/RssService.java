@@ -423,6 +423,9 @@ public class RssService {
 	}
 
 	public String cleanDescription(String description) {
+		if(description.contains("Please visit Dilbert.com")) {
+			description = "";
+		}
 		String unescapedDescription = StringEscapeUtils.unescapeHtml4(description);
 		unescapedDescription = unescapedDescription.replace("<![CDATA[", "").replace("]]>", "");
 		unescapedDescription = unescapedDescription.replace("<br />", "BREAK_HERE").replace("<br/>", "BREAK_HERE").replace("<br>", "BREAK_HERE").replace("&lt;br /&gt;", "BREAK_HERE")

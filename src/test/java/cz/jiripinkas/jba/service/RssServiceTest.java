@@ -182,6 +182,7 @@ public class RssServiceTest {
 		assertEquals("At first glance", rssService.cleanDescription("Share this post: At first glance Read More"));
 		assertEquals("At first glance, we get excited about lambdas. But soon, as we begin to program in Java 8, we begin to realize", rssService.cleanDescription("Share this post: At first glance, we get excited about lambdas. But soon, as we begin to program in Java 8, we begin to realize...<p class=\"readmore\"><a class=\"more-btn\" href=\"http://virtualjug.com/streams-the-real-powerhouse-in-java-8/\">Read More</a>"));
 		assertEquals("Yesterday page views of my blog touched the magical figure of 1 Million.", rssService.cleanDescription("RSS content Yesterday page views of my blog touched the magical figure of 1 Million."));
+		assertEquals("", rssService.cleanDescription("Dilbert readers - Please visit Dilbert.com to read this feature. Due to changes with our feeds, we are now making this RSS feed"));
 	}
 
 	@Test
