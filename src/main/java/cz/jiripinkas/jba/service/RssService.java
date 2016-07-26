@@ -242,7 +242,7 @@ public class RssService {
 						Item i = new Item();
 						i.setLink(getRealLink(data.get("url").asText(), HttpClientContext.create()));
 						i.setTitle(cleanTitle(data.get("title").asText()));
-						i.setDescription(cleanDescription(data.get("selftext").asText()));
+						i.setDescription(cleanDescription(data.get("selftext").asText()) + "<a href='https://www.reddit.com" + data.get("permalink").asText() + "'>[comments]</a>");
 						i.setPublishedDate(new Date(data.get("created").asLong() * 1000));
 						if (allLinksMap.containsKey(i.getLink())) {
 							// skip this item, it's already in the database
