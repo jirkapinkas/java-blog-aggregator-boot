@@ -15,7 +15,7 @@ public class BlogDto {
 	private CategoryDto category;
 
 	public String getPublicName() {
-		return MyUtil.getPublicName(nick, name);
+		return MyUtil.getPublicName(nick, name, true);
 	}
 
 	public CategoryDto getCategory() {

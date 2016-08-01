@@ -24,9 +24,23 @@ public final class MyUtil {
 		return permalink;
 	}
 
-	public static String getPublicName(String nick, String name) {
+	/**
+	 * Returns public name in format "nick (name)". 
+	 * If nick is empty, return "name".
+	 * If nick is too long, trim it (if trimLongNick is true) 
+	 * @param nick
+	 * @param name
+	 * @param trimLongNick
+	 * @return
+	 */
+	public static String getPublicName(String nick, String name, boolean trimLongNick) {
 		if (nick == null || nick.trim().isEmpty()) {
 			return name;
+		}
+		if(trimLongNick) {
+			if(nick.length() > 17) {
+				nick = nick.substring(0, 17) + " ...";
+			}
 		}
 		return nick + " (" + name + ")";
 	}

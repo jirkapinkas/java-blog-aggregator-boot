@@ -118,7 +118,7 @@ public class Blog {
 	}
 
 	public String getPublicName() {
-		return MyUtil.getPublicName(nick, name);
+		return MyUtil.getPublicName(nick, name, false);
 	}
 
 	public void setAggregator(Boolean aggregator) {
