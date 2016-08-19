@@ -128,7 +128,7 @@ public class RssService {
 		Builder requestConfigBuilder = RequestConfig.custom().setSocketTimeout(100000).setConnectTimeout(100000).setCookieSpec(CookieSpecs.IGNORE_COOKIES);
 		get.setConfig(requestConfigBuilder.build());
 		get.setHeader("Accept", "application/xml,application/rss+xml,text/html,*/*");
-		get.setHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.2; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/32.0.1667.0 Safari/537.36");
+		get.setHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36");
 		return get;
 	}
 
