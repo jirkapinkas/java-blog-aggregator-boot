@@ -127,7 +127,13 @@ public class RssService {
 		HttpGet get = new HttpGet(location);
 		Builder requestConfigBuilder = RequestConfig.custom().setSocketTimeout(100000).setConnectTimeout(100000).setCookieSpec(CookieSpecs.IGNORE_COOKIES);
 		get.setConfig(requestConfigBuilder.build());
-		get.setHeader("Accept", "application/xml,application/rss+xml,text/html,*/*");
+		get.setHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8");
+		get.setHeader("Accept-Encoding", "gzip, deflate, sdch");
+		get.setHeader("Accept-Language", "cs-CZ,cs;q=0.8,en;q=0.6,sk;q=0.4,und;q=0.2,pl;q=0.2");
+		get.setHeader("Cache-Control", "no-cache");
+		get.setHeader("Connection", "keep-alive");
+		get.setHeader("Pragma", "no-cache");
+		get.setHeader("Upgrade-Insecure-Requests", "1");
 		get.setHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36");
 		return get;
 	}
