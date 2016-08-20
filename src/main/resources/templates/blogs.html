@@ -18,7 +18,7 @@
 	<ul>
 		<th:block th:each="blog : ${blogs}">
 			<li th:if="${blog.lastCheckStatus != null and not blog.lastCheckStatus}">
-				<th:block th:text="${'fail ' + blog.name + ' ' + blog.lastCheckErrorCount + ' times), error: ' + blog.lastCheckErrorText}" />
+				<th:block th:text="${'fail ' + blog.name + ' (' + blog.lastCheckErrorCount + ' times), error: ' + blog.lastCheckErrorText}" />
 			</li>
 		</th:block>
 	</ul>
