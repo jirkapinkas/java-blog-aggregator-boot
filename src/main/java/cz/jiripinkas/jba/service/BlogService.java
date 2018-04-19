@@ -1,10 +1,7 @@
 package cz.jiripinkas.jba.service;
 
 import java.io.IOException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
@@ -125,19 +122,20 @@ public class BlogService {
 
 	@Transactional
 	public void update(Blog blog, String username, boolean isAdmin) {
-		Blog managedBlog = blogRepository.findOne(blog.getId());
-		if (!managedBlog.getUser().getName().equals(username) && !isAdmin) {
-			throw new AccessDeniedException("user attempted to edit another user's blog");
-		}
-		managedBlog.setName(blog.getName());
-		managedBlog.setShortName(blog.getShortName());
-		managedBlog.setUrl(blog.getUrl());
-		managedBlog.setHomepageUrl(blog.getHomepageUrl());
-		managedBlog.setAggregator(blog.getAggregator());
-		managedBlog.setNick(blog.getNick());
-		managedBlog.setMinRedditUps(blog.getMinRedditUps());
-		managedBlog.setArchived(blog.getArchived());
-		blogRepository.save(managedBlog);
+		blogRepository.findById(blog.getId()).ifPresent(managedBlog -> {
+			if (!managedBlog.getUser().getName().equals(username) && !isAdmin) {
+				throw new AccessDeniedException("user attempted to edit another user's blog");
+			}
+			managedBlog.setName(blog.getName());
+			managedBlog.setShortName(blog.getShortName());
+			managedBlog.setUrl(blog.getUrl());
+			managedBlog.setHomepageUrl(blog.getHomepageUrl());
+			managedBlog.setAggregator(blog.getAggregator());
+			managedBlog.setNick(blog.getNick());
+			managedBlog.setMinRedditUps(blog.getMinRedditUps());
+			managedBlog.setArchived(blog.getArchived());
+			blogRepository.save(managedBlog);
+		});
 	}
 
 	@Caching(evict = { @CacheEvict(value = "blogCount", allEntries = true),
@@ -150,22 +148,23 @@ public class BlogService {
 	}
 
 	@Transactional
-	public Blog findOne(int id) {
-		return blogRepository.findOne(id);
+	public Optional<Blog> findOne(int id) {
+		return blogRepository.findById(id);
 	}
 
 	@Cacheable("icons")
 	@Transactional
 	public byte[] getIcon(int blogId) throws IOException {
-		Blog blog = blogRepository.findOne(blogId);
-		if(blog == null) {
+		Optional<Blog> blog = blogRepository.findById(blogId);
+		if(!blog.isPresent()) {
 			throw new PageNotFoundException();
+		} else {
+			byte[] icon = blog.get().getIcon();
+			if (icon == null) {
+				return IOUtils.toByteArray(getClass().getResourceAsStream("/generic-blog.png"));
+			}
+			return icon;
 		}
-		byte[] icon = blog.getIcon();
-		if (icon == null) {
-			return IOUtils.toByteArray(getClass().getResourceAsStream("/generic-blog.png"));
-		}
-		return icon;
 	}
 
 	@Transactional

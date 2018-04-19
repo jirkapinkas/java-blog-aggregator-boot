@@ -2,6 +2,7 @@ package cz.jiripinkas.jba.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -34,13 +35,9 @@ public class UserService {
 		return userRepository.findAllFetchRoles();
 	}
 
-	public User findOne(int id) {
-		return userRepository.findOne(id);
-	}
-
 	@Transactional
 	public User findOneWithBlogs(int id) {
-		User user = findOne(id);
+		User user = userRepository.findById(id).get();
 		List<Blog> blogs = blogRepository.findByUserId(id);
 		user.setBlogs(blogs);
 		return user;
@@ -78,7 +75,7 @@ public class UserService {
 
 	@CacheEvict(value = "userCount", allEntries = true)
 	public void delete(int id) {
-		userRepository.delete(id);
+		userRepository.deleteById(id);
 	}
 
 	public User findOne(String username) {

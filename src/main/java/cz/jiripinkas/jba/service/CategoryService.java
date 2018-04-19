@@ -42,17 +42,17 @@ public class CategoryService {
 
 	@CacheEvict(value = "categories", allEntries = true)
 	public void delete(int id) {
-		categoryRepository.delete(id);
+		categoryRepository.deleteById(id);
 	}
 
 	public CategoryDto findOneDto(int id) {
-		return mapper.map(categoryRepository.findOne(id), CategoryDto.class);
+		return mapper.map(categoryRepository.findById(id).get(), CategoryDto.class);
 	}
 
 	@CacheEvict(value = "blogCountUnapproved", allEntries = true)
 	public void addMapping(int blogId, int categoryId) {
-		Category category = categoryRepository.findOne(categoryId);
-		Blog blog = blogRepository.findOne(blogId);
+		Category category = categoryRepository.findById(categoryId).get();
+		Blog blog = blogRepository.findById(blogId).get();
 		blog.setCategory(category);
 		blogRepository.save(blog);
 	}

@@ -67,7 +67,7 @@ public class NewsService {
 	}
 
 	public void delete(int id) {
-		newsItemRepository.delete(id);
+		newsItemRepository.deleteById(id);
 	}
 
 }

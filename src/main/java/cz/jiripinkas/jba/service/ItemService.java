@@ -1,11 +1,6 @@
 package cz.jiripinkas.jba.service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.List;
+import java.util.*;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -211,9 +206,13 @@ public class ItemService {
 
 	@Transactional
 	public boolean toggleEnabled(int id) {
-		Item item = itemRepository.findOne(id);
-		item.setEnabled(!item.isEnabled());
-		return item.isEnabled();
+		Optional<Item> optional = itemRepository.findById(id);
+		if(optional.isPresent()) {
+			Item item = optional.get();
+			item.setEnabled(!item.isEnabled());
+			return item.isEnabled();
+		}
+		return false;
 	}
 
 	@Cacheable("itemCount")
@@ -239,7 +238,7 @@ public class ItemService {
 
 	private int like(int itemId, int amount) {
 		itemRepository.changeLike(itemId, amount);
-		return calculateDisplayLikeCount(itemRepository.findOne(itemId));
+		return calculateDisplayLikeCount(itemRepository.findById(itemId).get());
 	}
 
 	@Transactional
