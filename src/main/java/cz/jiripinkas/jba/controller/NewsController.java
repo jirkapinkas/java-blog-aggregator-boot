@@ -59,7 +59,7 @@ public class NewsController {
 	}
 
 	@ResponseBody
-	@RequestMapping("/feed")
+	@RequestMapping("/feed.xml")
 	public String rss(@RequestHeader(value = "User-Agent", required = false) String userAgent) {
 		log.info("UA: {}", userAgent);
 		log.info("Navigated to rss feed");
