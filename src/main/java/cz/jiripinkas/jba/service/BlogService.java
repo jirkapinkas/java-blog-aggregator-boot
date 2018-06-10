@@ -148,8 +148,9 @@ public class BlogService {
 	}
 
 	@Transactional
-	public Optional<Blog> findOne(int id) {
-		return blogRepository.findById(id);
+	public Blog findOne(int id) {
+		Optional<Blog> optional = blogRepository.findById(id);
+		return optional.orElse(null);
 	}
 
 	@Cacheable("icons")
