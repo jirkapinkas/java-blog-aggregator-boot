@@ -12,7 +12,6 @@ import cz.jiripinkas.jba.exception.UrlException;
 import cz.jiripinkas.jba.rss.TRss;
 import cz.jiripinkas.jba.rss.TRssChannel;
 import cz.jiripinkas.jba.rss.TRssItem;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.config.CookieSpecs;
@@ -42,11 +41,14 @@ import java.io.File;
 import java.io.Reader;
 import java.io.StringReader;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Service
 public class RssService {
@@ -137,8 +139,9 @@ public class RssService {
 
 		try {
 			if (localFile) {
-				File file = new File(location);
-				page = FileUtils.readFileToString(file).trim();
+				page = Files.lines(Paths.get(location))
+						.collect(Collectors.joining("\n"))
+						.trim();
 			} else {
 				HttpGet get = constructGet(location);
 				CloseableHttpResponse response = null;

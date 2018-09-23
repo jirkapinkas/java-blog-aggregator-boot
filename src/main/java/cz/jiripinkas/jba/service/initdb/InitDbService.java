@@ -1,28 +1,17 @@
 package cz.jiripinkas.jba.service.initdb;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.PostConstruct;
-
-import org.apache.commons.io.IOUtils;
+import cz.jiripinkas.jba.entity.*;
+import cz.jiripinkas.jba.repository.*;
+import cz.jiripinkas.jba.service.ConfigurationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import cz.jiripinkas.jba.entity.Blog;
-import cz.jiripinkas.jba.entity.Category;
-import cz.jiripinkas.jba.entity.Configuration;
-import cz.jiripinkas.jba.entity.Role;
-import cz.jiripinkas.jba.entity.User;
-import cz.jiripinkas.jba.repository.BlogRepository;
-import cz.jiripinkas.jba.repository.CategoryRepository;
-import cz.jiripinkas.jba.repository.ItemRepository;
-import cz.jiripinkas.jba.repository.RoleRepository;
-import cz.jiripinkas.jba.repository.UserRepository;
-import cz.jiripinkas.jba.service.ConfigurationService;
+import javax.annotation.PostConstruct;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Transactional
 @Service
@@ -124,9 +113,9 @@ public class InitDbService {
 		Configuration configuration = configurationService.find();
 		if (configuration == null) {
 			configuration = new Configuration();
-			configuration.setIcon(IOUtils.toByteArray(getClass().getResourceAsStream("/java-logo.png")));
-			configuration.setFavicon(IOUtils.toByteArray(getClass().getResourceAsStream("/favicon.ico")));
-			configuration.setAppleTouchIcon(IOUtils.toByteArray(getClass().getResourceAsStream("/apple-touch-icon.png")));
+			configuration.setIcon(getClass().getResourceAsStream("/java-logo.png").readAllBytes());
+			configuration.setFavicon(getClass().getResourceAsStream("/favicon.ico").readAllBytes());
+			configuration.setAppleTouchIcon(getClass().getResourceAsStream("/apple-touch-icon.png").readAllBytes());
 			configuration.setTitle("Java Blog Aggregator");
 			configuration.setHomepageHeading("Latest news from the Java world:");
 			configuration.setTopHeading("Best Java news");

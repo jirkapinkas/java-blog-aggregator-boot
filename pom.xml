@@ -57,12 +57,6 @@
         </dependency>
 
         <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-            <version>2.4</version>
-        </dependency>
-
-        <dependency>
             <groupId>ma.glasnost.orika</groupId>
             <artifactId>orika-core</artifactId>
             <version>1.5.2</version>
@@ -153,7 +147,7 @@
                 <dependency>
                     <groupId>org.postgresql</groupId>
                     <artifactId>postgresql</artifactId>
-                    <version>9.4.1207</version><!--$NO-MVN-MAN-VER$ -->
+                    <version>42.2.4</version>
                 </dependency>
             </dependencies>
             <build>

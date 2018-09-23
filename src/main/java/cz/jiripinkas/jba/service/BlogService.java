@@ -1,22 +1,5 @@
 package cz.jiripinkas.jba.service;
 
-import java.io.IOException;
-import java.util.*;
-
-import org.apache.commons.io.IOUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.cache.annotation.Caching;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.core.parameters.P;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import cz.jiripinkas.jba.entity.Blog;
 import cz.jiripinkas.jba.entity.Item;
 import cz.jiripinkas.jba.entity.User;
@@ -25,6 +8,21 @@ import cz.jiripinkas.jba.repository.BlogRepository;
 import cz.jiripinkas.jba.repository.ItemRepository;
 import cz.jiripinkas.jba.repository.UserRepository;
 import cz.jiripinkas.jba.util.MyUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.parameters.P;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.io.IOException;
+import java.util.*;
 
 @Service
 public class BlogService {
@@ -162,7 +160,7 @@ public class BlogService {
 		} else {
 			byte[] icon = blog.get().getIcon();
 			if (icon == null) {
-				return IOUtils.toByteArray(getClass().getResourceAsStream("/generic-blog.png"));
+				return getClass().getResourceAsStream("/generic-blog.png").readAllBytes();
 			}
 			return icon;
 		}
