@@ -26,12 +26,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.runners.MockitoJUnitRunner;
 
 import cz.jiripinkas.jba.entity.Blog;
 import cz.jiripinkas.jba.entity.Item;
 import cz.jiripinkas.jba.exception.RssException;
 import cz.jiripinkas.jba.exception.UrlException;
+import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class RssServiceTest {
@@ -227,7 +227,7 @@ public class RssServiceTest {
 		Mockito.when(statusLine.getStatusCode()).thenReturn(200);
 		Mockito.when(closeableHttpResponse.getStatusLine()).thenReturn(statusLine);
 		Mockito.when(closeableHttpResponse.getEntity()).thenReturn(httpEntity);
-		Mockito.when(httpClient.execute((HttpUriRequest) Mockito.anyObject(), (HttpContext) Mockito.anyObject())).thenReturn(closeableHttpResponse);
+		Mockito.when(httpClient.execute(Mockito.any(), (HttpContext) Mockito.any())).thenReturn(closeableHttpResponse);
 		String realLink = rssService.getRealLink("http://www.java-skoleni.cz/skoleni.php?id=java", httpClientContext);
 		assertEquals("http://www.java-skoleni.cz/kurz/java", realLink);
 	}
@@ -254,7 +254,7 @@ public class RssServiceTest {
 		Mockito.when(statusLine.getStatusCode()).thenReturn(returnStatus);
 		Mockito.when(closeableHttpResponse.getStatusLine()).thenReturn(statusLine);
 		Mockito.when(closeableHttpResponse.getEntity()).thenReturn(httpEntity);
-		Mockito.when(httpClient.execute((HttpUriRequest) Mockito.anyObject(), (HttpContext) Mockito.anyObject())).thenReturn(closeableHttpResponse);
+		Mockito.when(httpClient.execute(Mockito.any(), (HttpContext) Mockito.any())).thenReturn(closeableHttpResponse);
 	}
 
 	@Test

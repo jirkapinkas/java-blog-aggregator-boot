@@ -37,7 +37,7 @@ public class NewsService {
 	}
 
 	public Page<NewsItem> findNews(int page) {
-		return newsItemRepository.findAll(new PageRequest(page, PAGE_SIZE, Direction.DESC, "publishedDate"));
+		return newsItemRepository.findAll(PageRequest.of(page, PAGE_SIZE, Direction.DESC, "publishedDate"));
 	}
 	
 	public List<NewsItem> findAll() {
