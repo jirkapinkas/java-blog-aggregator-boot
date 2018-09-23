@@ -6,8 +6,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
+import ma.glasnost.orika.MapperFacade;
 import org.apache.commons.lang.StringEscapeUtils;
-import org.dozer.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Sort.Direction;
@@ -31,7 +31,7 @@ public class ItemService {
 	private AllCategoriesService allCategoriesService;
 
 	@Autowired
-	private Mapper mapper;
+	private MapperFacade mapperFacade;
 
 	public enum OrderType {
 		LATEST, MOST_VIEWED
@@ -175,7 +175,7 @@ public class ItemService {
 		items = query.setFirstResult(page * 10).setMaxResults(10).getResultList();
 
 		for (Item item : items) {
-			ItemDto itemDto = mapper.map(item, ItemDto.class);
+			ItemDto itemDto = mapperFacade.map(item, ItemDto.class);
 			// calculate like count
 			itemDto.setDisplayLikeCount(calculateDisplayLikeCount(item));
 			result.add(itemDto);

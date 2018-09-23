@@ -1,8 +1,9 @@
 package cz.jiripinkas.jba;
 
+import ma.glasnost.orika.MapperFacade;
+import ma.glasnost.orika.impl.DefaultMapperFactory;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
-import org.dozer.DozerBeanMapper;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.cache.CacheManager;
@@ -30,8 +31,8 @@ public class Application {
 	}
 
 	@Bean
-	public DozerBeanMapper dozerBeanMapper() {
-		return new DozerBeanMapper();
+	public MapperFacade dozerBeanMapper() {
+		return new DefaultMapperFactory.Builder().build().getMapperFacade();
 	}
 
 	@Bean

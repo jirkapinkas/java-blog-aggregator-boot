@@ -1,28 +1,19 @@
 package cz.jiripinkas.jba.service;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.Reader;
-import java.io.StringReader;
-import java.nio.charset.Charset;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import cz.jiripinkas.jba.atom.Entry;
+import cz.jiripinkas.jba.atom.Feed;
+import cz.jiripinkas.jba.atom.Link;
+import cz.jiripinkas.jba.entity.Blog;
+import cz.jiripinkas.jba.entity.Item;
+import cz.jiripinkas.jba.exception.RssException;
+import cz.jiripinkas.jba.exception.UrlException;
+import cz.jiripinkas.jba.rss.TRss;
+import cz.jiripinkas.jba.rss.TRssChannel;
+import cz.jiripinkas.jba.rss.TRssItem;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
@@ -41,19 +32,21 @@ import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import cz.jiripinkas.jba.atom.Entry;
-import cz.jiripinkas.jba.atom.Feed;
-import cz.jiripinkas.jba.atom.Link;
-import cz.jiripinkas.jba.entity.Blog;
-import cz.jiripinkas.jba.entity.Item;
-import cz.jiripinkas.jba.exception.RssException;
-import cz.jiripinkas.jba.exception.UrlException;
-import cz.jiripinkas.jba.rss.TRss;
-import cz.jiripinkas.jba.rss.TRssChannel;
-import cz.jiripinkas.jba.rss.TRssItem;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.Reader;
+import java.io.StringReader;
+import java.nio.charset.Charset;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class RssService {
@@ -432,7 +425,7 @@ public class RssService {
 		if(description.contains("Please visit Dilbert.com")) {
 			description = "";
 		}
-		String unescapedDescription = StringEscapeUtils.unescapeHtml4(description);
+		String unescapedDescription = StringEscapeUtils.unescapeHtml(description);
 		unescapedDescription = unescapedDescription.replace("<![CDATA[", "").replace("]]>", "");
 		unescapedDescription = unescapedDescription.replace("<br />", "BREAK_HERE").replace("<br/>", "BREAK_HERE").replace("<br>", "BREAK_HERE").replace("&lt;br /&gt;", "BREAK_HERE")
 				.replace("&lt;br/&gt;", "BREAK_HERE").replace("&lt;br&gt;", "BREAK_HERE");
