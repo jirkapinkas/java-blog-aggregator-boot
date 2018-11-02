@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.core.env.Profiles;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
@@ -37,7 +38,7 @@ public class ConfigurationInterceptor extends HandlerInterceptorAdapter {
 		 * Attributes will be available in every page.
 		 */
 		if (modelAndView != null) {
-			if(environment.acceptsProfiles("dev")) {
+			if(environment.acceptsProfiles(Profiles.of("dev"))) {
 				modelAndView.getModelMap().addAttribute("isDevProfileActive", true);
 			} else {
 				modelAndView.getModelMap().addAttribute("isDevProfileActive", false);

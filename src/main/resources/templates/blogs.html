@@ -69,7 +69,7 @@
 			</td>
 			<th:block sec:authorize="hasRole('ROLE_ADMIN')">
 				<td>
-					<a th:href="${'/users/' + blog.user.id}" th:text="${blog.user.name}"></a>
+					<a th:href="${'/admin/users/' + blog.user.id}" th:text="${blog.user.name}"></a>
 				</td>
 				<td>
 					<a th:href="${'/blog-form?blogId=' + blog.id}" class="btn btn-primary btn-xs">

@@ -14,16 +14,13 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ImportResource;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
 
-@ImportResource("classpath:security.xml")
 @SpringBootApplication
 @EnableCaching
 @EnableScheduling
-@EnableWebSecurity
 public class Application {
 
 	public static void main(String[] args) {
