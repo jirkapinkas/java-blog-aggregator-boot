@@ -2,24 +2,25 @@ package cz.jiripinkas.jba.repository;
 
 import java.util.List;
 
-import javax.transaction.Transactional;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import cz.jiripinkas.jba.entity.Blog;
+import org.springframework.transaction.annotation.Transactional;
 
 public interface BlogRepository extends JpaRepository<Blog, Integer> {
 
 	@Query("select distinct b from Blog b left join fetch b.items where b.user.id = ?1 order by b.id")
 	List<Blog> findByUserId(int id);
 
+	@Transactional(readOnly = true)
 	Blog findByUrl(String url);
 
 	@Query("select b from Blog b join fetch b.user where b.id = ?1")
 	Blog findOneFetchUser(int id);
 
+	@Transactional(readOnly = true)
 	@Query("select b from Blog b left join fetch b.category where b.shortName = ?1")
 	Blog findByShortName(String shortName);
 

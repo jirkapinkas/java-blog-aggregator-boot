@@ -33,8 +33,8 @@ public class Blog {
 	@Column(length = Integer.MAX_VALUE, updatable = false)
 	private byte[] icon;
 
+	@Size(min = 1, max = 1000, message = "Invalid URL!")
 	@UniqueBlog(message = "This blog already exists!")
-	@Size(min = 1, message = "Invalid URL!")
 	@URL(message = "Invalid URL!")
 	@Column(length = 1000, unique = true)
 	private String url;
@@ -49,9 +49,9 @@ public class Blog {
 	@OneToMany(mappedBy = "blog", cascade = CascadeType.REMOVE)
 	private List<Item> items;
 
+	@Size(min = 1, max = 255, message = "Short name must be between 1 and 255 characters!")
 	@UniqueShortName(message = "This short name already exists!")
 	@NotNull
-	@Size(min = 1, message = "Short name cannot be empty!")
 	@Column(name = "short_name", unique = true)
 	private String shortName;
 
