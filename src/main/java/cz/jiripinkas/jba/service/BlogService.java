@@ -134,7 +134,8 @@ public class BlogService {
 			managedBlog.setArchived(blog.getArchived());
 			if(blog.getArchived()) {
 				managedBlog.setLastCheckErrorCount(0);
-				managedBlog.setLastCheckErrorText("");
+				managedBlog.setLastCheckErrorText(null);
+				managedBlog.setLastCheckStatus(true);
 			}
 			blogRepository.save(managedBlog);
 		});
