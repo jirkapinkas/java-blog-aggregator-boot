@@ -132,6 +132,10 @@ public class BlogService {
 			managedBlog.setNick(blog.getNick());
 			managedBlog.setMinRedditUps(blog.getMinRedditUps());
 			managedBlog.setArchived(blog.getArchived());
+			if(blog.getArchived()) {
+				managedBlog.setLastCheckErrorCount(0);
+				managedBlog.setLastCheckErrorText("");
+			}
 			blogRepository.save(managedBlog);
 		});
 	}
