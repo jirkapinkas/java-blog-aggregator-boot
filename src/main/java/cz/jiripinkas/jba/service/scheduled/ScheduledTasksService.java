@@ -257,7 +257,8 @@ public class ScheduledTasksService {
 	// will run every 3 hours
 	@Scheduled(fixedDelay = 3 * 60 * 60 * 1000, initialDelay = 1000)
 	public void retrieveSocialShareCount() {
-		log.info("retrieve social share count start");
+		long millis = System.currentTimeMillis();
+		log.info("retrieve social share count started");
 		Integer[] allCategories = allCategoriesService.getAllCategoryIds();
 		int page = 0;
 		int retrievedItems = 0;
@@ -323,7 +324,7 @@ public class ScheduledTasksService {
 //				}
 			}
 		} while (retrievedItems > 0);
-		log.info("retrieve social share count finish");
+		log.info("retrieve social share count finished: {} seconds", ((System.currentTimeMillis() - millis) / 1000));
 	}
 
 }
