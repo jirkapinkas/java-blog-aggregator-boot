@@ -254,8 +254,8 @@ public class ScheduledTasksService {
 	@Autowired
 	private RestTemplate restTemplate;
 
-	// will run every 2 hours
-	@Scheduled(fixedDelay = 2 * 60 * 60 * 1000, initialDelay = 1000)
+	// will run every 3 hours
+	@Scheduled(fixedDelay = 3 * 60 * 60 * 1000, initialDelay = 1000)
 	public void retrieveSocialShareCount() {
 		log.info("retrieve social share count start");
 		Integer[] allCategories = allCategoriesService.getAllCategoryIds();
@@ -301,6 +301,9 @@ public class ScheduledTasksService {
 				}
 				String facebookSharesUrl = "https://graph.facebook.com/?id=" + itemDto.getLink();
 				try {
+					// To prevent "Application request limit reached" error
+					// https://stackoverflow.com/questions/14092989/facebook-api-4-application-request-limit-reached
+					Thread.sleep(3_000);
 					FacebookShareJson facebookShareJson = restTemplate.getForObject(facebookSharesUrl, FacebookShareJson.class);
 					if (facebookShareJson != null && facebookShareJson.getShare()!= null && facebookShareJson.getShare().getShareCount() != itemDto.getFacebookShareCount()) {
 						itemRepository.setFacebookShareCount(itemDto.getId(), facebookShareJson.getShare().getShareCount());
