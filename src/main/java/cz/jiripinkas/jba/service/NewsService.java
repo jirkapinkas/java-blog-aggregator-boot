@@ -53,11 +53,12 @@ public class NewsService {
 		Page<NewsItem> firstTenNews = findNews(0);
 		return RssGenerator
 				.of(configuration.getChannelLink(), configuration.getChannelTitle(), configuration.getChannelDescription())
+				.defaultDir("news")
 				.addPages(firstTenNews.getContent(), newsItem -> {
 					return WebPage.rssBuilder()
 							.title(newsItem.getTitle())
 							.description(newsItem.getShortDescription())
-							.link("news/" + newsItem.getShortName())
+							.link(newsItem.getShortName())
 							.pubDate(newsItem.getPublishedDate())
 							.build();
 				})
