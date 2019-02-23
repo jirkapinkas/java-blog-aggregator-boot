@@ -69,7 +69,9 @@ public class ScheduledTasksService {
 	// 1 hour = 60 seconds * 60 minutes * 1000
 	@Scheduled(fixedDelay = 60 * 60 * 1000)
 	@CacheEvict(value = "itemCount", allEntries = true)
-	public void reloadBlogs() {
+	public void reloadBlogItems() {
+	    long millis = System.currentTimeMillis();
+	    log.info("reloading blog items started");
 		// first process blogs which have aggregator = null,
 		// next blogs with aggregator = false
 		// and last blogs with aggregator = true
@@ -96,6 +98,7 @@ public class ScheduledTasksService {
 			}
 		}
 		blogService.setLastIndexedDateFinish(new Date());
+        log.info("reloading blog items finished: {} seconds", ((System.currentTimeMillis() - millis) / 1000));
 	}
 
 	/**
@@ -122,7 +125,8 @@ public class ScheduledTasksService {
 	@Transactional
 	@Scheduled(fixedDelay = 24 * 60 * 60 * 1000, initialDelay = 10000)
 	public void computePopularity() {
-		log.info("compute popularity start");
+	    long millis = System.currentTimeMillis();
+		log.info("compute popularity started");
 		for (Blog blog : blogService.findAll(true)) {
 			Calendar dateFromCalendar = new GregorianCalendar();
 			dateFromCalendar.add(Calendar.MONTH, -3);
@@ -133,7 +137,7 @@ public class ScheduledTasksService {
 			}
 			blogRepository.setPopularity(blog.getId(), popularity);
 		}
-		log.info("compute popularity end");
+		log.info("compute popularity finished: {} seconds", ((System.currentTimeMillis() - millis) / 1000));
 	}
 
 	int[] getCurrentWeekAndYear(Date currentDate) {
@@ -152,7 +156,8 @@ public class ScheduledTasksService {
 	// should run every saturday at 7 A.M.
 	@Scheduled(cron = "0 0 7 * * SUN")
 	public void addWeeklyNews() {
-		log.info("add weekly news");
+	    long millis = System.currentTimeMillis();
+		log.info("add weekly news started");
 		final int[] weekAndYear = getCurrentWeekAndYear(new Date());
 		final int week = weekAndYear[0];
 		final int year = weekAndYear[1];
@@ -190,6 +195,7 @@ public class ScheduledTasksService {
 			}
 			newsItem.setDescription(description);
 			newsService.save(newsItem);
+			log.info("add weekly news finished: {} seconds", ((System.currentTimeMillis() - millis) / 1000));
 		}
 	}
 
