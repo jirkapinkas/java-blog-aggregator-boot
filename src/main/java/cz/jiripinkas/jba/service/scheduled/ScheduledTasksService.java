@@ -1,18 +1,17 @@
 package cz.jiripinkas.jba.service.scheduled;
 
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.temporal.TemporalField;
-import java.time.temporal.WeekFields;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
+import cz.jiripinkas.jba.dto.ItemDto;
+import cz.jiripinkas.jba.entity.Blog;
+import cz.jiripinkas.jba.entity.Category;
+import cz.jiripinkas.jba.entity.Configuration;
+import cz.jiripinkas.jba.entity.NewsItem;
+import cz.jiripinkas.jba.repository.BlogRepository;
+import cz.jiripinkas.jba.repository.ItemRepository;
+import cz.jiripinkas.jba.repository.NewsItemRepository;
+import cz.jiripinkas.jba.service.*;
+import cz.jiripinkas.jba.service.ItemService.MaxType;
+import cz.jiripinkas.jba.service.ItemService.OrderType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,29 +22,14 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
-
-import cz.jiripinkas.jba.dto.ItemDto;
-import cz.jiripinkas.jba.entity.Blog;
-import cz.jiripinkas.jba.entity.Category;
-import cz.jiripinkas.jba.entity.Configuration;
-import cz.jiripinkas.jba.entity.NewsItem;
-import cz.jiripinkas.jba.repository.BlogRepository;
-import cz.jiripinkas.jba.repository.ItemRepository;
-import cz.jiripinkas.jba.repository.NewsItemRepository;
-import cz.jiripinkas.jba.service.AllCategoriesService;
-import cz.jiripinkas.jba.service.BlogService;
-import cz.jiripinkas.jba.service.CategoryService;
-import cz.jiripinkas.jba.service.ConfigurationService;
-import cz.jiripinkas.jba.service.ItemService;
-import cz.jiripinkas.jba.service.ItemService.MaxType;
-import cz.jiripinkas.jba.service.ItemService.OrderType;
-import cz.jiripinkas.jba.service.NewsService;
-import twitter4j.Query;
-import twitter4j.QueryResult;
-import twitter4j.RateLimitStatus;
-import twitter4j.Twitter;
-import twitter4j.TwitterFactory;
+import twitter4j.*;
 import twitter4j.conf.ConfigurationBuilder;
+
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.temporal.TemporalField;
+import java.time.temporal.WeekFields;
+import java.util.*;
 
 @Service
 public class ScheduledTasksService {
@@ -237,19 +221,19 @@ public class ScheduledTasksService {
 		}
 	}
 
-	private static class LinkedinShareJson {
-
-		private int count;
-
-		public int getCount() {
-			return count;
-		}
-
-		@SuppressWarnings("unused")
-		public void setCount(int count) {
-			this.count = count;
-		}
-	}
+//	private static class LinkedinShareJson {
+//
+//		private int count;
+//
+//		public int getCount() {
+//			return count;
+//		}
+//
+//		@SuppressWarnings("unused")
+//		public void setCount(int count) {
+//			this.count = count;
+//		}
+//	}
 
 	@Autowired
 	private RestTemplate restTemplate;
@@ -265,9 +249,9 @@ public class ScheduledTasksService {
 		do {
 			List<ItemDto> dtoItems = itemService.getDtoItems(page++, true, OrderType.LATEST, MaxType.WEEK, allCategories);
 			retrievedItems = dtoItems.size();
+			String twitterOauth = configurationService.find().getTwitterOauth();
 			for (ItemDto itemDto : dtoItems) {
 				try {
-					String twitterOauth = configurationService.find().getTwitterOauth();
 					// https://developer.twitter.com/en/apps
 					if (twitterOauth != null && !twitterOauth.trim().isEmpty()) {
 						String[] twitterOauthParts = twitterOauth.split(":");
@@ -285,10 +269,9 @@ public class ScheduledTasksService {
 						RateLimitStatus rateLimitStatus = twitter.getRateLimitStatus().get("/search/tweets");
 						int remaining = rateLimitStatus.getRemaining();
 						if (remaining <= 1) {
-							Thread.sleep(15 * 60 * 1000); // sleep for 15
-															// minutes, this
-															// will reset the
-															// limit for sure
+							log.info("Twitter rate limit approaching, will wait for 15 minutes");
+							// sleep for 15 minutes, this will reset the limit for sure
+							Thread.sleep(15 * 60 * 1000);
 						}
 						Query query = new Query(itemDto.getLink());
 						QueryResult result = twitter.search(query);
@@ -304,11 +287,20 @@ public class ScheduledTasksService {
 				try {
 					// To prevent "Application request limit reached" error
 					// https://stackoverflow.com/questions/14092989/facebook-api-4-application-request-limit-reached
-					Thread.sleep(3_000);
-					FacebookShareJson facebookShareJson = restTemplate.getForObject(facebookSharesUrl, FacebookShareJson.class);
-					if (facebookShareJson != null && facebookShareJson.getShare()!= null && facebookShareJson.getShare().getShareCount() != itemDto.getFacebookShareCount()) {
-						itemRepository.setFacebookShareCount(itemDto.getId(), facebookShareJson.getShare().getShareCount());
+					// https://developers.facebook.com/docs/graph-api/advanced/rate-limiting/
+					// limit seems to be 200 requests per user per hour, which means every 1 request per 18 seconds, 21 seconds sleep should be safe
+					Thread.sleep(21_000);
+					Optional<Integer> optional;
+					try {
+						optional = getFacebookShares(facebookSharesUrl, itemDto.getFacebookShareCount());
+					} catch (Exception e) {
+						log.error("Facebook throttled getting facebook shares, will try again");
+						// probably got throttled anyway :-( sleep for 10 minutes and try again
+						Thread.sleep(10 * 60 * 1000);
+						optional = getFacebookShares(facebookSharesUrl, itemDto.getFacebookShareCount());
 					}
+					optional.ifPresent(shareCount -> itemRepository.setFacebookShareCount(itemDto.getId(), shareCount));
+
 				} catch (Exception ex) {
 					log.error("Error retrieving facebook shares, url = {}", facebookSharesUrl, ex);
 				}
@@ -325,6 +317,14 @@ public class ScheduledTasksService {
 			}
 		} while (retrievedItems > 0);
 		log.info("retrieve social share count finished: {} seconds", ((System.currentTimeMillis() - millis) / 1000));
+	}
+
+	private Optional<Integer> getFacebookShares(String facebookSharesUrl, int currentFacebookShareCount) {
+		FacebookShareJson facebookShareJson = restTemplate.getForObject(facebookSharesUrl, FacebookShareJson.class);
+		if (facebookShareJson != null && facebookShareJson.getShare()!= null && facebookShareJson.getShare().getShareCount() != currentFacebookShareCount) {
+			return Optional.of(facebookShareJson.getShare().getShareCount());
+		}
+		return Optional.empty();
 	}
 
 }
