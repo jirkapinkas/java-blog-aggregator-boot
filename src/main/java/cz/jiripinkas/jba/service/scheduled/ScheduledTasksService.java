@@ -299,13 +299,14 @@ public class ScheduledTasksService {
 				} catch (Exception ex) {
 					log.error("Error retrieving twitter shares", ex);
 				}
+				String facebookSharesUrl = "https://graph.facebook.com/?id=" + itemDto.getLink();
 				try {
-					FacebookShareJson facebookShareJson = restTemplate.getForObject("https://graph.facebook.com/?id=" + itemDto.getLink(), FacebookShareJson.class);
-					if (facebookShareJson.getShare().getShareCount() != itemDto.getFacebookShareCount()) {
+					FacebookShareJson facebookShareJson = restTemplate.getForObject(facebookSharesUrl, FacebookShareJson.class);
+					if (facebookShareJson != null && facebookShareJson.getShare()!= null && facebookShareJson.getShare().getShareCount() != itemDto.getFacebookShareCount()) {
 						itemRepository.setFacebookShareCount(itemDto.getId(), facebookShareJson.getShare().getShareCount());
 					}
 				} catch (Exception ex) {
-					log.error("Error retrieving facebook shares", ex);
+					log.error("Error retrieving facebook shares, url = {}", facebookSharesUrl, ex);
 				}
 				// not working since 2018 :-(
 				// https://warfareplugins.com/linkedin-drops-share-counts/
