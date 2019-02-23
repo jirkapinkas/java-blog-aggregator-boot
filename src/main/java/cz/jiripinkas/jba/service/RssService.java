@@ -73,7 +73,7 @@ public class RssService {
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 			db = dbf.newDocumentBuilder();
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("Error setting up JAXB", e);
 		}
 	}
 
@@ -254,7 +254,7 @@ public class RssService {
 					}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("Error retrieving Reddit items", e);
 			throw new RssException(e);
 		}
 		return list;

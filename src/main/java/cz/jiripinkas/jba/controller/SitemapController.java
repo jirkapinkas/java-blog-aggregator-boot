@@ -1,18 +1,17 @@
 package cz.jiripinkas.jba.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-
-import cz.jiripinkas.jba.entity.Blog;
-import cz.jiripinkas.jba.entity.Configuration;
-import cz.jiripinkas.jba.entity.NewsItem;
 import cz.jiripinkas.jba.service.BlogService;
 import cz.jiripinkas.jba.service.ConfigurationService;
 import cz.jiripinkas.jba.service.NewsService;
 import cz.jiripinkas.jsitemapgenerator.WebPage;
 import cz.jiripinkas.jsitemapgenerator.generator.SitemapGenerator;
+import cz.jiripinkas.jsitemapgenerator.robots.RobotsRule;
+import cz.jiripinkas.jsitemapgenerator.robots.RobotsTxtGenerator;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class SitemapController {
@@ -27,35 +26,26 @@ public class SitemapController {
 	private NewsService newsService;
 	
 	@ResponseBody
-	@RequestMapping("/robots.txt")
+	@RequestMapping(path = "/robots.txt", produces = MediaType.TEXT_PLAIN_VALUE)
 	public String getRobots() {
-		StringBuilder stringBuilder = new StringBuilder();
-		stringBuilder.append("Sitemap: ");
-		stringBuilder.append(configurationService.find().getChannelLink());
-		stringBuilder.append("/sitemap.xml");
-		stringBuilder.append("\n");
-		stringBuilder.append("User-agent: *");
-		stringBuilder.append("\n");
-		stringBuilder.append("Allow: /");
-		stringBuilder.append("\n");
-		return stringBuilder.toString();
+		return RobotsTxtGenerator.of(configurationService.find().getChannelLink())
+				.addSitemap("sitemap.xml")
+				.addRule(RobotsRule.builder().userAgentAll().allowAll().build())
+				.toString();
 	}
 
 	@ResponseBody
-	@RequestMapping("/sitemap")
+	@RequestMapping(path = "/sitemap.xml", produces = MediaType.APPLICATION_XML_VALUE)
 	public String getSitemap() {
-		Configuration configuration = configurationService.find();
-		SitemapGenerator sitemapGenerator = new SitemapGenerator(configuration.getChannelLink());
-		sitemapGenerator.addPage(new WebPage().setName(""));
-		sitemapGenerator.addPage(new WebPage().setName("blogs"));
-		sitemapGenerator.addPage(new WebPage().setName("news"));
-		for (Blog blog : blogService.findAll(false)) {
-			sitemapGenerator.addPage(new WebPage().setName("blog/" + blog.getShortName()));
-		}
-		for (NewsItem newsItem : newsService.findAll()) {
-			sitemapGenerator.addPage(new WebPage().setName("news/" + newsItem.getShortName()));
-		}
-		return sitemapGenerator.constructSitemapString();
+		return SitemapGenerator.of(configurationService.find().getChannelLink())
+				.addPage(WebPage.builder().nameRoot().build())
+				.addPage(WebPage.of("blogs"))
+				.addPage(WebPage.of("news"))
+				.defaultDir("blog")
+				.addPages(blogService.findAll(false), blog -> WebPage.of(blog.getShortName()))
+				.defaultDir("news")
+				.addPages(newsService.findAll(), newsItem -> WebPage.of(newsItem.getShortName()))
+				.toString();
 	}
 
 }

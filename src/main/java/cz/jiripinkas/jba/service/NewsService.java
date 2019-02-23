@@ -1,8 +1,11 @@
 package cz.jiripinkas.jba.service;
 
-import java.util.Date;
-import java.util.List;
-
+import cz.jiripinkas.jba.entity.Configuration;
+import cz.jiripinkas.jba.entity.NewsItem;
+import cz.jiripinkas.jba.repository.NewsItemRepository;
+import cz.jiripinkas.jba.util.MyUtil;
+import cz.jiripinkas.jsitemapgenerator.WebPage;
+import cz.jiripinkas.jsitemapgenerator.generator.RssGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -10,12 +13,8 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import cz.jiripinkas.jba.entity.Configuration;
-import cz.jiripinkas.jba.entity.NewsItem;
-import cz.jiripinkas.jba.repository.NewsItemRepository;
-import cz.jiripinkas.jba.util.MyUtil;
-import cz.jiripinkas.jsitemapgenerator.RssItemBuilder;
-import cz.jiripinkas.jsitemapgenerator.generator.RssGenerator;
+import java.util.Date;
+import java.util.List;
 
 @Service
 public class NewsService {
@@ -52,18 +51,17 @@ public class NewsService {
 	public String getFeed() {
 		Configuration configuration = configurationService.find();
 		Page<NewsItem> firstTenNews = findNews(0);
-		RssGenerator rssGenerator = new RssGenerator(configuration.getChannelLink(), configuration.getChannelTitle(), configuration.getChannelDescription());
-		for (NewsItem newsItem : firstTenNews.getContent()) {
-			rssGenerator.addPage(
-					new RssItemBuilder()
-					.title(newsItem.getTitle())
-					.description(newsItem.getShortDescription())
-					.name("news/" + newsItem.getShortName())
-					.pubDate(newsItem.getPublishedDate())
-					.build()
-					);
-		}
-		return rssGenerator.constructRss();
+		return RssGenerator
+				.of(configuration.getChannelLink(), configuration.getChannelTitle(), configuration.getChannelDescription())
+				.addPages(firstTenNews.getContent(), newsItem -> {
+					return WebPage.rssBuilder()
+							.title(newsItem.getTitle())
+							.description(newsItem.getShortDescription())
+							.link("news/" + newsItem.getShortName())
+							.pubDate(newsItem.getPublishedDate())
+							.build();
+				})
+				.toString();
 	}
 
 	public void delete(int id) {

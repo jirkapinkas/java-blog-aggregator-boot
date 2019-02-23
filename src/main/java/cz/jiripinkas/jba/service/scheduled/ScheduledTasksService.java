@@ -267,6 +267,7 @@ public class ScheduledTasksService {
 			for (ItemDto itemDto : dtoItems) {
 				try {
 					String twitterOauth = configurationService.find().getTwitterOauth();
+					// https://developer.twitter.com/en/apps
 					if (twitterOauth != null && !twitterOauth.trim().isEmpty()) {
 						String[] twitterOauthParts = twitterOauth.split(":");
 						String consumerKey = twitterOauthParts[0];
@@ -296,7 +297,7 @@ public class ScheduledTasksService {
 						}
 					}
 				} catch (Exception ex) {
-					ex.printStackTrace();
+					log.error("Error retrieving twitter shares", ex);
 				}
 				try {
 					FacebookShareJson facebookShareJson = restTemplate.getForObject("https://graph.facebook.com/?id=" + itemDto.getLink(), FacebookShareJson.class);
@@ -304,7 +305,7 @@ public class ScheduledTasksService {
 						itemRepository.setFacebookShareCount(itemDto.getId(), facebookShareJson.getShare().getShareCount());
 					}
 				} catch (Exception ex) {
-					ex.printStackTrace();
+					log.error("Error retrieving facebook shares", ex);
 				}
 				// not working since 2018 :-(
 				// https://warfareplugins.com/linkedin-drops-share-counts/
@@ -314,7 +315,7 @@ public class ScheduledTasksService {
 //						itemRepository.setLinkedinShareCount(itemDto.getId(), linkedinShareJson.getCount());
 //					}
 //				} catch (Exception ex) {
-//					ex.printStackTrace();
+//					log.error("Error retrieving linkedin shares", ex);
 //				}
 			}
 		} while (retrievedItems > 0);
