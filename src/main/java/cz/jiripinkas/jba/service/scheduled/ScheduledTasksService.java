@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -208,17 +209,31 @@ public class ScheduledTasksService {
 		}
 	}
 
-	private static class FacebookShareJson {
+	private static class Share {
 
-		private int shares;
+		@JsonProperty("share_count")
+		private int shareCount;
 
-		public int getShares() {
-			return shares;
+		public int getShareCount() {
+			return shareCount;
 		}
 
-		@SuppressWarnings("unused")
-		public void setShares(int shares) {
-			this.shares = shares;
+		public void setShareCount(int shareCount) {
+			this.shareCount = shareCount;
+		}
+
+	}
+
+	private static class FacebookShareJson {
+
+		private Share share;
+
+		public Share getShare() {
+			return share;
+		}
+
+		public void setShare(Share share) {
+			this.share = share;
 		}
 	}
 
@@ -284,9 +299,9 @@ public class ScheduledTasksService {
 					ex.printStackTrace();
 				}
 				try {
-					FacebookShareJson facebookShareJson = restTemplate.getForObject("http://graph.facebook.com/?id=" + itemDto.getLink(), FacebookShareJson.class);
-					if (facebookShareJson.getShares() != itemDto.getFacebookShareCount()) {
-						itemRepository.setFacebookShareCount(itemDto.getId(), facebookShareJson.getShares());
+					FacebookShareJson facebookShareJson = restTemplate.getForObject("https://graph.facebook.com/?id=" + itemDto.getLink(), FacebookShareJson.class);
+					if (facebookShareJson.getShare().getShareCount() != itemDto.getFacebookShareCount()) {
+						itemRepository.setFacebookShareCount(itemDto.getId(), facebookShareJson.getShare().getShareCount());
 					}
 				} catch (Exception ex) {
 					ex.printStackTrace();
