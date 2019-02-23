@@ -306,14 +306,16 @@ public class ScheduledTasksService {
 				} catch (Exception ex) {
 					ex.printStackTrace();
 				}
-				try {
-					LinkedinShareJson linkedinShareJson = restTemplate.getForObject("https://www.linkedin.com/countserv/count/share?format=json&url=" + itemDto.getLink(), LinkedinShareJson.class);
-					if (linkedinShareJson.getCount() != itemDto.getLinkedinShareCount()) {
-						itemRepository.setLinkedinShareCount(itemDto.getId(), linkedinShareJson.getCount());
-					}
-				} catch (Exception ex) {
-					ex.printStackTrace();
-				}
+				// not working since 2018 :-(
+				// https://warfareplugins.com/linkedin-drops-share-counts/
+//				try {
+//					LinkedinShareJson linkedinShareJson = restTemplate.getForObject("https://www.linkedin.com/countserv/count/share?format=json&url=" + itemDto.getLink(), LinkedinShareJson.class);
+//					if (linkedinShareJson.getCount() != itemDto.getLinkedinShareCount()) {
+//						itemRepository.setLinkedinShareCount(itemDto.getId(), linkedinShareJson.getCount());
+//					}
+//				} catch (Exception ex) {
+//					ex.printStackTrace();
+//				}
 			}
 		} while (retrievedItems > 0);
 		log.info("retrieve social share count finish");
