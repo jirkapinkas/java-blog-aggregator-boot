@@ -132,7 +132,7 @@ public class BlogService {
 			managedBlog.setNick(blog.getNick());
 			managedBlog.setMinRedditUps(blog.getMinRedditUps());
 			managedBlog.setArchived(blog.getArchived());
-			if(blog.getArchived()) {
+			if(blog.getArchived() != null && blog.getArchived()) {
 				managedBlog.setLastCheckErrorCount(0);
 				managedBlog.setLastCheckErrorText(null);
 				managedBlog.setLastCheckStatus(true);
