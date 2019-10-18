@@ -3,6 +3,7 @@ package cz.jiripinkas.jba.service.initdb;
 import cz.jiripinkas.jba.entity.*;
 import cz.jiripinkas.jba.repository.*;
 import cz.jiripinkas.jba.service.ConfigurationService;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -113,9 +114,9 @@ public class InitDbService {
 		Configuration configuration = configurationService.find();
 		if (configuration == null) {
 			configuration = new Configuration();
-			configuration.setIcon(getClass().getResourceAsStream("/java-logo.png").readAllBytes());
-			configuration.setFavicon(getClass().getResourceAsStream("/favicon.ico").readAllBytes());
-			configuration.setAppleTouchIcon(getClass().getResourceAsStream("/apple-touch-icon.png").readAllBytes());
+			configuration.setIcon(IOUtils.toByteArray(getClass().getResourceAsStream("/java-logo.png")));
+			configuration.setFavicon(IOUtils.toByteArray(getClass().getResourceAsStream("/favicon.ico")));
+			configuration.setAppleTouchIcon(IOUtils.toByteArray(getClass().getResourceAsStream("/apple-touch-icon.png")));
 			configuration.setTitle("Java Blog Aggregator");
 			configuration.setHomepageHeading("Latest news from the Java world:");
 			configuration.setTopHeading("Best Java news");
