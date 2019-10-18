@@ -3,9 +3,9 @@ package cz.jiripinkas.jba.service;
 import cz.jiripinkas.jba.dto.CategoryDto;
 import cz.jiripinkas.jba.entity.Blog;
 import cz.jiripinkas.jba.entity.Category;
+import cz.jiripinkas.jba.mapper.CategoryMapper;
 import cz.jiripinkas.jba.repository.BlogRepository;
 import cz.jiripinkas.jba.repository.CategoryRepository;
-import ma.glasnost.orika.MapperFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -23,7 +23,7 @@ public class CategoryService {
 	private BlogRepository blogRepository;
 
 	@Autowired
-	private MapperFacade mapperFacade;
+	private CategoryMapper categoryMapper;
 
 	@Cacheable("categories")
 	public List<Category> findAll() {
@@ -45,7 +45,7 @@ public class CategoryService {
 	}
 
 	public CategoryDto findOneDto(int id) {
-		return mapperFacade.map(categoryRepository.findById(id).get(), CategoryDto.class);
+		return categoryMapper.categoryToCategoryDto(categoryRepository.findById(id).orElse(null));
 	}
 
 	@CacheEvict(value = "blogCountUnapproved", allEntries = true)

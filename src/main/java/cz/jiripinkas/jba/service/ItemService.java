@@ -1,12 +1,9 @@
 package cz.jiripinkas.jba.service;
 
-import java.util.*;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
-
-import ma.glasnost.orika.MapperFacade;
+import cz.jiripinkas.jba.dto.ItemDto;
+import cz.jiripinkas.jba.entity.Item;
+import cz.jiripinkas.jba.mapper.ItemMapper;
+import cz.jiripinkas.jba.repository.ItemRepository;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
@@ -14,9 +11,10 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import cz.jiripinkas.jba.dto.ItemDto;
-import cz.jiripinkas.jba.entity.Item;
-import cz.jiripinkas.jba.repository.ItemRepository;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+import java.util.*;
 
 @Service
 public class ItemService {
@@ -31,7 +29,7 @@ public class ItemService {
 	private AllCategoriesService allCategoriesService;
 
 	@Autowired
-	private MapperFacade mapperFacade;
+	private ItemMapper itemMapper;
 
 	public enum OrderType {
 		LATEST, MOST_VIEWED
@@ -175,7 +173,7 @@ public class ItemService {
 		items = query.setFirstResult(page * 10).setMaxResults(10).getResultList();
 
 		for (Item item : items) {
-			ItemDto itemDto = mapperFacade.map(item, ItemDto.class);
+			ItemDto itemDto = itemMapper.itemToItemDto(item);
 			// calculate like count
 			itemDto.setDisplayLikeCount(calculateDisplayLikeCount(item));
 			result.add(itemDto);
