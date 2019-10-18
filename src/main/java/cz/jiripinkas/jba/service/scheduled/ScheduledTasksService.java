@@ -75,7 +75,7 @@ public class ScheduledTasksService {
 		// first process blogs which have aggregator = null,
 		// next blogs with aggregator = false
 		// and last blogs with aggregator = true
-		List<Blog> blogs = blogRepository.findAll(new Sort(Direction.ASC, "aggregator"));
+		List<Blog> blogs = blogRepository.findAll(Sort.by(Direction.ASC, "aggregator"));
 
 		// TODO this is very memory-intensive
 		List<String> allLinks = itemRepository.findAllLinks();

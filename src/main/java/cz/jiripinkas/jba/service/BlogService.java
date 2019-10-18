@@ -141,9 +141,11 @@ public class BlogService {
 		});
 	}
 
-	@Caching(evict = { @CacheEvict(value = "blogCount", allEntries = true),
+	@Caching(evict = {
+			@CacheEvict(value = "blogCount", allEntries = true),
 			@CacheEvict(value = "blogCountUnapproved", allEntries = true),
-			@CacheEvict(value = "icons", allEntries = true) })
+			@CacheEvict(value = "icons", allEntries = true)
+	})
 	@Transactional
 	@PreAuthorize("#blog.user.name == authentication.name or hasRole('ROLE_ADMIN')")
 	public void delete(@P("blog") Blog blog) {
