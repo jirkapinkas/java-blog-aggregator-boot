@@ -37,7 +37,6 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.Reader;
 import java.io.StringReader;
 import java.nio.charset.Charset;
@@ -49,6 +48,7 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class RssService {
@@ -139,9 +139,11 @@ public class RssService {
 
 		try {
 			if (localFile) {
-				page = Files.lines(Paths.get(location))
-						.collect(Collectors.joining("\n"))
-						.trim();
+				try(Stream<String> stream = Files.lines(Paths.get(location))) {
+					page = stream
+							.collect(Collectors.joining("\n"))
+							.trim();
+				}
 			} else {
 				HttpGet get = constructGet(location);
 				CloseableHttpResponse response = null;

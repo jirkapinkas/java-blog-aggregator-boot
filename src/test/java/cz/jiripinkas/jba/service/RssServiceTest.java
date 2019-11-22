@@ -1,23 +1,13 @@
 package cz.jiripinkas.jba.service;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-
-import java.io.IOException;
-import java.net.URI;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.TimeZone;
-
+import cz.jiripinkas.jba.entity.Blog;
+import cz.jiripinkas.jba.entity.Item;
+import cz.jiripinkas.jba.exception.RssException;
+import cz.jiripinkas.jba.exception.UrlException;
 import org.apache.http.HttpEntity;
 import org.apache.http.StatusLine;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.protocol.HttpContext;
@@ -26,12 +16,16 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-
-import cz.jiripinkas.jba.entity.Blog;
-import cz.jiripinkas.jba.entity.Item;
-import cz.jiripinkas.jba.exception.RssException;
-import cz.jiripinkas.jba.exception.UrlException;
 import org.mockito.junit.MockitoJUnitRunner;
+
+import java.io.IOException;
+import java.net.URI;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 @RunWith(MockitoJUnitRunner.class)
 public class RssServiceTest {
