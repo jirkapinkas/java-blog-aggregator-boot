@@ -21,7 +21,8 @@ jobs:
       uses: appleboy/scp-action@master
       with:
         source: target/java-blog-aggregator.jar
-        target: /hosting/topblogs/java-blog-aggregator.jar
+        target: /hosting/topblogs
+        strip_components: 1
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.PASSWORD }}
