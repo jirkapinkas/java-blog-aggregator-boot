@@ -16,11 +16,23 @@ jobs:
     - name: Build with Maven
       run: mvn -B package -Duser.timezone=CET --file pom.xml
 
-    - name: executing remote ssh commands using password
+  - name: Copy JAR to remote
+      uses: garygrossgarten/github-action-scp@release
+      with:
+        local: target/java-blog-aggregator.jar
+        remote: scp/single/hosting/topblogs/java-blog-aggregator.jar
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        password: ${{ secrets.PASSWORD }}
+        port: ${{ secrets.PORT }}
+
+    - name: Restart topjavablogs
       uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.PASSWORD }}
         port: ${{ secrets.PORT }}
-        script: whoami
+        script: |
+          /etc/init.d/topjavablogs stop
+          /etc/init.d/topjavablogs start
