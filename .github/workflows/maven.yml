@@ -14,7 +14,7 @@ jobs:
       with:
         java-version: 1.8
     - name: Build with Maven
-      run: mvn -B package --file pom.xml
+      run: mvn -B package -Duser.timezone=CET --file pom.xml
 
     - name: executing remote ssh commands using password
       uses: appleboy/ssh-action@master
