@@ -18,10 +18,10 @@ jobs:
       run: mvn -B package -P prod -Duser.timezone=CET --file pom.xml
 
     - name: Copy JAR to remote
-      uses: garygrossgarten/github-action-scp@release
+      uses: appleboy/scp-action@master
       with:
-        local: target/java-blog-aggregator.jar
-        remote: scp/single/hosting/topblogs/java-blog-aggregator.jar
+        source: target/java-blog-aggregator.jar
+        target: hosting/topblogs/java-blog-aggregator.jar
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.PASSWORD }}
