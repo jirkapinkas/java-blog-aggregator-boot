@@ -16,7 +16,7 @@ jobs:
     - name: Build with Maven
       run: mvn -B package -Duser.timezone=CET --file pom.xml
 
-  - name: Copy JAR to remote
+    - name: Copy JAR to remote
       uses: garygrossgarten/github-action-scp@release
       with:
         local: target/java-blog-aggregator.jar
