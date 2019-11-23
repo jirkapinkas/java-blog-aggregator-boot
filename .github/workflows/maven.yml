@@ -37,4 +37,3 @@ jobs:
         script: |
           /etc/init.d/topjavablogs stop
           /etc/init.d/topjavablogs start
-
