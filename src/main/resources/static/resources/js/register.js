@@ -1,6 +1,10 @@
 
 JBA.register = {};
 
+JBA.register.init = function() {
+	$(".passCode").val("fuckSpam")
+}
+
 /*
  * registration form validation
  */

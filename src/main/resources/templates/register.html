@@ -51,6 +51,7 @@
 	</div>
 	<div class="form-group">
 		<div class="col-sm-2">
+			<input type="hidden" name="passCode" class="passCode" value="" />
 			<input type="submit" value="Save" class="btn btn-lg btn-primary" />
 		</div>
 	</div>
@@ -60,6 +61,7 @@
 <script type="text/javascript">
 $(document).ready(function() {
 	$(".registrationForm").validate(JBA.register.validate);
+	JBA.register.init()
 });
 </script>
 
