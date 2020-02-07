@@ -33,7 +33,7 @@ public class SecurityConfiguration {
     }
 
     @Configuration
-    @Order(1)
+    @Order(2)
     public static class ActuatorWebSecurityConfigurationAdapter extends WebSecurityConfigurerAdapter {
 
         @Override
