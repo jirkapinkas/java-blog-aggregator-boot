@@ -8,6 +8,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -19,6 +20,8 @@ public class SecurityConfiguration {
     @Configuration
     @Order(1)
     public static class ResourcesWebSecurityConfigurationAdapter extends WebSecurityConfigurerAdapter {
+
+        @Override
         protected void configure(HttpSecurity http) throws Exception {
             http.antMatcher("/resources/**")
                     .headers()
@@ -26,6 +29,22 @@ public class SecurityConfiguration {
                     .authorizeRequests()
                     .anyRequest()
                     .permitAll();
+        }
+    }
+
+    @Configuration
+    @Order(1)
+    public static class ActuatorWebSecurityConfigurationAdapter extends WebSecurityConfigurerAdapter {
+
+        @Override
+        protected void configure(HttpSecurity http) throws Exception {
+            http.antMatcher("/actuator/**")
+                    .authorizeRequests()
+                    .anyRequest()
+                    .hasRole("ADMIN")
+                    .and()
+                    .sessionManagement()
+                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         }
     }
 
@@ -41,8 +60,6 @@ public class SecurityConfiguration {
                     .hasRole("USER")
                     .antMatchers("/blog-form**")
                     .hasRole("USER")
-                    .antMatchers("/actuator/**")
-                    .hasRole("ADMIN")
                     .and()
                     .csrf()
                     .disable()
