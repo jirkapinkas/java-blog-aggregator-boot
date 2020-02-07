@@ -38,7 +38,12 @@ public class SecurityConfiguration {
 
         @Override
         protected void configure(HttpSecurity http) throws Exception {
-            http.antMatcher("/actuator/**")
+            http
+                    .csrf()
+                    .disable()
+                    .httpBasic()
+                    .and()
+                    .antMatcher("/actuator/**")
                     .authorizeRequests()
                     .anyRequest()
                     .hasRole("ADMIN")
