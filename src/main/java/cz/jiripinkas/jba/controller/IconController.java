@@ -47,7 +47,7 @@ public class IconController {
 		try {
 			return blogService.getIcon(blogId);
 		} catch (PageNotFoundException e) {
-			log.error("Icon not found! Blog id: {}", blogId);
+			log.warn("Icon not found! Blog id: {}", blogId);
 			throw e;
 		}
 	}

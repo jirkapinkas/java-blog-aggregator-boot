@@ -51,7 +51,7 @@ public class NewsController {
 		log.info("Navigated to news: {}", shortName);
 		NewsItem newsItem = newsService.findOne(shortName);
 		if(newsItem == null) {
-			log.error("News not found: {}", shortName);
+			log.warn("News not found: {}", shortName);
 			throw new PageNotFoundException();
 		}
 		model.addAttribute("news", newsItem);

@@ -204,7 +204,7 @@ public class RssService {
 			}
 		} catch (Exception e) {
 			log.debug("Stacktrace", e);
-			log.error("Error downloading real link: {}", link);
+			log.warn("Error downloading real link: {}", link);
 			throw new UrlException("Exception during downloading: " + link);
 		}
 		if (realLink != null) {

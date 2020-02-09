@@ -44,7 +44,7 @@ public class BlogController {
 	private void findBlog(String shortName, Model model) {
 		Blog blog = blogService.findByShortName(shortName);
 		if (blog == null) {
-			log.error("Blog not found {}", shortName);
+			log.warn("Blog not found {}", shortName);
 			throw new PageNotFoundException();
 		}
 		model.addAttribute("title", "Blog: " + blog.getPublicName());
