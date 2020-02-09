@@ -51,6 +51,7 @@ public class BlogService {
 	private Date lastIndexedDateFinish;
 
 	public void saveItems(Blog blog, Map<String, Object> allLinksMap, Map<String, Object> allLowercaseTitlesMap) {
+		log.info("save blog: {}", blog.getShortName());
 		StringBuilder errors = new StringBuilder();
 		try {
 			List<Item> items = rssService.getItems(blog.getUrl(), blog, allLinksMap);

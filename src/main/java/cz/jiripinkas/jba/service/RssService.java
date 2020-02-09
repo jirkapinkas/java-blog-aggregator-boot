@@ -164,7 +164,7 @@ public class RssService {
 			Document document = db.parse(new ByteArrayInputStream(page.getBytes(Charset.forName("UTF-8"))));
 			node = document.getDocumentElement();
 		} catch (Exception ex) {
-			log.error("Error parsing XML file: {}", location);
+			log.warn("Error parsing XML file: {}", location);
 			throw new RssException(ex.getMessage());
 		}
 
