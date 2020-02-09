@@ -120,6 +120,12 @@ public class ScheduledTasksService {
 					// archived blogs won't be indexed
 					if (blog.getArchived() == null || blog.getArchived() == false) {
 						blogService.saveItems(blog, allLinksMap, allLowercaseTitlesMap);
+					} else {
+						// for archived blogs clear error count and error status
+						blog.setLastCheckErrorCount(0);
+						blog.setLastCheckErrorText(null);
+						blog.setLastCheckStatus(true);
+						blogService.update(blog, null, true);
 					}
 				}
 			}
