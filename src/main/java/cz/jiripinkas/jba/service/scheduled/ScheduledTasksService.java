@@ -12,6 +12,8 @@ import cz.jiripinkas.jba.repository.NewsItemRepository;
 import cz.jiripinkas.jba.service.*;
 import cz.jiripinkas.jba.service.ItemService.MaxType;
 import cz.jiripinkas.jba.service.ItemService.OrderType;
+import org.h2.mvstore.MVMap;
+import org.h2.mvstore.MVStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,8 @@ import org.springframework.web.client.RestTemplate;
 import twitter4j.*;
 import twitter4j.conf.ConfigurationBuilder;
 
+import java.io.File;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.temporal.TemporalField;
@@ -63,6 +67,20 @@ public class ScheduledTasksService {
 	@Autowired
 	private AllCategoriesService allCategoriesService;
 
+	private void populateAllLinksMap(MVMap<String, Object> allLinksMap) {
+		List<String> allLinks = itemRepository.findAllLinks();
+		for (String link : allLinks) {
+			allLinksMap.put(link, null);
+		}
+	}
+
+	private void populateAllLowercaseTitlesMap(MVMap<String, Object> allLowercaseTitlesMap) {
+		List<String> allLowercaseTitles = itemRepository.findAllLowercaseTitles();
+		for (String title : allLowercaseTitles) {
+			allLowercaseTitlesMap.put(title, null);
+		}
+	}
+
 	/**
 	 * For each blog retrieve latest items and store them into database.
 	 */
@@ -77,23 +95,51 @@ public class ScheduledTasksService {
 		// and last blogs with aggregator = true
 		List<Blog> blogs = blogRepository.findAll(Sort.by(Direction.ASC, "aggregator"));
 
-		// TODO this is very memory-intensive
-		List<String> allLinks = itemRepository.findAllLinks();
-		List<String> allLowercaseTitles = itemRepository.findAllLowercaseTitles();
-		Map<String, Object> allLinksMap = new HashMap<>();
-		for (String link : allLinks) {
-			allLinksMap.put(link, null);
-		}
-		Map<String, Object> allLowercaseTitlesMap = new HashMap<>();
-		for (String title : allLowercaseTitles) {
-			allLowercaseTitlesMap.put(title, null);
-		}
-		for (Blog blog : blogs) {
-			// reindex timeout must have passed in order to index this blog
-			if (reindexTimeoutPassed(blog.getLastIndexedDate())) {
-				// archived blogs won't be indexed
-				if(blog.getArchived() == null || blog.getArchived() == false) {
-					blogService.saveItems(blog, allLinksMap, allLowercaseTitlesMap);
+		File file1 = null;
+		MVStore mvstore1 = null;
+		File file2 = null;
+		MVStore mvstore2 = null;
+		try {
+			file1 = File.createTempFile("topjavablogs-allLinksMap", "mvstore");
+			mvstore1 = new MVStore.Builder()
+					.fileName(file1.toString())
+					.open();
+			MVMap<String, Object> allLinksMap = mvstore1.openMap("allLinksMap");
+			populateAllLinksMap(allLinksMap);
+
+			file2 = File.createTempFile("topjavablogs-allLowercaseTitlesMap", "mvstore");
+			mvstore2 = new MVStore.Builder()
+					.fileName(file2.toString())
+					.open();
+			MVMap<String, Object> allLowercaseTitlesMap = mvstore2.openMap("allLowercaseTitlesMap");
+			populateAllLowercaseTitlesMap(allLinksMap);
+
+			for (Blog blog : blogs) {
+				// reindex timeout must have passed in order to index this blog
+				if (reindexTimeoutPassed(blog.getLastIndexedDate())) {
+					// archived blogs won't be indexed
+					if (blog.getArchived() == null || blog.getArchived() == false) {
+						blogService.saveItems(blog, allLinksMap, allLowercaseTitlesMap);
+					}
+				}
+			}
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		} finally {
+			if(mvstore1 != null) {
+				mvstore1.close();
+			}
+			if(file1 != null) {
+				if(!file1.delete()) {
+					throw new RuntimeException("Unable to close file: " + file1);
+				}
+			}
+			if(mvstore2 != null) {
+				mvstore2.close();
+			}
+			if(file2 != null) {
+				if(!file2.delete()) {
+					throw new RuntimeException("Unable to close file: " + file2);
 				}
 			}
 		}
