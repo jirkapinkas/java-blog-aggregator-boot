@@ -182,6 +182,10 @@ public class RssService {
 		link = link.trim();
 		link = link.replace("&amp;", "&");
 		String realLink = null;
+		// do not perform check for audio & video files (this would likely throw OutOfMemoryError)
+		if(link.endsWith(".mp4") || link.endsWith(".mp3") || link.endsWith(".avi") || link.endsWith(".mkv")) {
+			return link;
+		}
 		try {
 			HttpGet get = constructGet(link);
 			CloseableHttpResponse response = null;
