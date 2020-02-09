@@ -70,14 +70,14 @@ public class ScheduledTasksService {
 	private void populateAllLinksMap(MVMap<String, Object> allLinksMap) {
 		List<String> allLinks = itemRepository.findAllLinks();
 		for (String link : allLinks) {
-			allLinksMap.put(link, null);
+			allLinksMap.put(link, link);
 		}
 	}
 
 	private void populateAllLowercaseTitlesMap(MVMap<String, Object> allLowercaseTitlesMap) {
 		List<String> allLowercaseTitles = itemRepository.findAllLowercaseTitles();
 		for (String title : allLowercaseTitles) {
-			allLowercaseTitlesMap.put(title, null);
+			allLowercaseTitlesMap.put(title, title);
 		}
 	}
 
