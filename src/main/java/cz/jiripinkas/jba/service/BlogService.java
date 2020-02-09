@@ -85,7 +85,7 @@ public class BlogService {
 						itemRepository.save(item);
 						// when I save something, I must set lastIndexedDate
 						blogResultService.saveLastIndexedDate(blog);
-						allLinksMap.put(item.getLink(), null);
+						allLinksMap.put(item.getLink(), item.getLink());
 						// break this loop, so that only single item is saved.
 						break;
 					}
@@ -93,8 +93,8 @@ public class BlogService {
 			}
 			blogResultService.saveOk(blog);
 		} catch (Exception e) {
-			log.warn("Error downloading: " + blog.getUrl() + " message: " + e.getMessage());
-			log.debug("Stacktrace", e);
+			log.warn("Error downloading: {} message: {}", blog.getUrl(), e.getMessage());
+			log.warn("Stacktrace", e);
 			errors.append(e.getMessage());
 		}
 		if (errors.length() != 0) {
