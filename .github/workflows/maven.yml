@@ -17,6 +17,20 @@ jobs:
     - name: Build JAR
       run: mvn -B clean compile com.google.cloud.tools:jib-maven-plugin:2.0.0:build -P prod -Duser.timezone=CET -Djib.to.auth.username=jirkapinkas -Djib.to.auth.password=${{ secrets.GH_ACCESS_TOKEN }} --file pom.xml
 
+    - name: Docker stuff :-)
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        password: ${{ secrets.PASSWORD }}
+        port: ${{ secrets.PORT }}
+        script: |
+          docker pull docker.pkg.github.com/jirkapinkas/java-blog-aggregator-boot/java-blog-aggregator
+          docker image prune -f
+          docker rm -v -f java-blog-aggregator | true
+          docker run --restart=no -d --name java-blog-aggregator -p 8083:8083 -v /hosting/topblogs/topjavablogs.properties:/topjavablogs.properties --add-host=postgres:185.8.239.196 docker.pkg.github.com/jirkapinkas/java-blog-aggregator-boot/java-blog-aggregator:latest
+#         TODO change --restart=no to --restart=always
+
 #    - name: Copy JAR to remote
 #      uses: appleboy/scp-action@master
 #      with:
