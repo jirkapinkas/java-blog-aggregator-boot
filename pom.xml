@@ -225,6 +225,32 @@
                             <argLine>-Duser.timezone=CET</argLine>
                         </configuration>
                     </plugin>
+                    <plugin>
+                        <groupId>com.google.cloud.tools</groupId>
+                        <artifactId>jib-maven-plugin</artifactId>
+                        <version>2.1.0</version>
+                        <configuration>
+                            <from>
+                                <image>adoptopenjdk/openjdk11-openj9:alpine-jre</image>
+                            </from>
+                            <to>
+                                <image>docker.pkg.github.com/jirkapinkas/repo/jba</image>
+                            </to>
+                            <container>
+                                <jvmFlags>
+                                    <jvmFlag>-XX:+UseStringDeduplication</jvmFlag>
+                                    <jvmFlag>-Duser.timezone=Europe/Prague</jvmFlag>
+                                </jvmFlags>
+                                <args>
+                                    <arg>--spring.profiles.active=prod</arg>
+                                    <arg>--spring.config.additional-location=file:/topjavablogs.properties</arg>
+                                </args>
+                                <volumes>
+                                    <volume>/hosting/topblogs/topjavablogs.properties:/topjavablogs.properties</volume>
+                                </volumes>
+                            </container>
+                        </configuration>
+                    </plugin>
                 </plugins>
             </build>
         </profile>
