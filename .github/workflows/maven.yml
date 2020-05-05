@@ -15,7 +15,7 @@ jobs:
         java-version: 1.8
 
     - name: Build JAR
-      run: mvn -B package com.google.cloud.tools:jib-maven-plugin:2.0.0:build -P prod -Duser.timezone=CET --file pom.xml -Djib.to.auth.username=jirkapinkas -Djib.to.auth.password=${{ secrets.USERNAME }}
+      run: mvn -B package com.google.cloud.tools:jib-maven-plugin:2.0.0:build -P prod -Duser.timezone=CET -Djib.to.auth.username=jirkapinkas -Djib.to.auth.password=${{ secrets.GH_ACCESS_TOKEN }} --file pom.xml
 
     - name: Copy JAR to remote
       uses: appleboy/scp-action@master
