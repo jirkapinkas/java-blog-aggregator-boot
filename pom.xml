@@ -245,9 +245,6 @@
                                     <arg>--spring.profiles.active=prod</arg>
                                     <arg>--spring.config.additional-location=file:/topjavablogs.properties</arg>
                                 </args>
-                                <volumes>
-                                    <volume>/hosting/topblogs/topjavablogs.properties:/topjavablogs.properties</volume>
-                                </volumes>
                             </container>
                         </configuration>
                     </plugin>
