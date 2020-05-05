@@ -240,6 +240,7 @@
                                 <jvmFlags>
                                     <jvmFlag>-XX:+UseStringDeduplication</jvmFlag>
                                     <jvmFlag>-Duser.timezone=Europe/Prague</jvmFlag>
+                                    <jvmFlag>-Xmx250m</jvmFlag>
                                 </jvmFlags>
                                 <args>
                                     <arg>--spring.profiles.active=prod</arg>
