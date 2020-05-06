@@ -243,7 +243,7 @@
                                 </jvmFlags>
                                 <args>
                                     <arg>--spring.profiles.active=prod</arg>
-                                    <arg>--spring.config.additional-location=file:/topjavablogs.properties</arg>
+                                    <arg>--spring.config.additional-location=file:/application.properties</arg>
                                 </args>
                             </container>
                         </configuration>

@@ -28,4 +28,4 @@ jobs:
           docker pull docker.pkg.github.com/jirkapinkas/java-blog-aggregator-boot/java-blog-aggregator
           docker image prune -f
           docker rm -v -f topjavablogs | true
-          docker run --restart=always -d --name topjavablogs -p 8083:8083 -v /hosting/topjavablogs/topjavablogs.properties:/topjavablogs.properties --add-host=postgres:185.8.239.196 docker.pkg.github.com/jirkapinkas/java-blog-aggregator-boot/java-blog-aggregator:latest
+          docker run --restart=always -d --name topjavablogs -p 8083:8080 -v /hosting/topjavablogs/application.properties:/application.properties --add-host=postgres:185.8.239.196 docker.pkg.github.com/jirkapinkas/java-blog-aggregator-boot/java-blog-aggregator:latest
