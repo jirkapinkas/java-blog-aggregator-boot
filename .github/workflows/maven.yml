@@ -15,7 +15,7 @@ jobs:
         java-version: 1.8
 
     - name: Build JAR
-      run: mvn -B clean compile com.google.cloud.tools:jib-maven-plugin:2.0.0:build -P prod -Duser.timezone=CET -Djib.to.auth.username=jirkapinkas -Djib.to.auth.password=${{ secrets.GH_ACCESS_TOKEN }} --file pom.xml
+      run: mvn -B clean compile com.google.cloud.tools:jib-maven-plugin:2.2.0:build -P prod -Duser.timezone=CET -Djib.to.auth.username=jirkapinkas -Djib.to.auth.password=${{ secrets.GH_ACCESS_TOKEN }} --file pom.xml
 
     - name: Docker stuff :-)
       uses: appleboy/ssh-action@master
@@ -27,5 +27,5 @@ jobs:
         script: |
           docker pull docker.pkg.github.com/jirkapinkas/java-blog-aggregator-boot/java-blog-aggregator
           docker image prune -f
-          docker rm -v -f java-blog-aggregator | true
-          docker run --restart=always -d --name java-blog-aggregator -p 8083:8083 -v /hosting/topblogs/topjavablogs.properties:/topjavablogs.properties --add-host=postgres:185.8.239.196 docker.pkg.github.com/jirkapinkas/java-blog-aggregator-boot/java-blog-aggregator:latest
+          docker rm -v -f topjavablogs | true
+          docker run --restart=always -d --name topjavablogs -p 8083:8083 -v /hosting/topjavablogs/topjavablogs.properties:/topjavablogs.properties --add-host=postgres:185.8.239.196 docker.pkg.github.com/jirkapinkas/java-blog-aggregator-boot/java-blog-aggregator:latest
