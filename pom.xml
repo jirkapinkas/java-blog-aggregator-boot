@@ -231,7 +231,7 @@
                         <version>2.1.0</version>
                         <configuration>
                             <from>
-                                <image>adoptopenjdk/openjdk11-openj9:alpine-jre</image>
+                                <image>adoptopenjdk/openjdk11:alpine-jre</image>
                             </from>
                             <to>
                                 <image>docker.pkg.github.com/jirkapinkas/java-blog-aggregator-boot/java-blog-aggregator</image>
@@ -240,7 +240,6 @@
                                 <jvmFlags>
                                     <jvmFlag>-XX:+UseStringDeduplication</jvmFlag>
                                     <jvmFlag>-Duser.timezone=Europe/Prague</jvmFlag>
-                                    <jvmFlag>-Xmx250m</jvmFlag>
                                 </jvmFlags>
                                 <args>
                                     <arg>--spring.profiles.active=prod</arg>
