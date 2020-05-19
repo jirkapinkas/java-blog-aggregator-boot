@@ -243,6 +243,7 @@
                             <container>
                                 <jvmFlags>
                                     <jvmFlag>-XX:+UseStringDeduplication</jvmFlag>
+                                    <jvmFlag>-Djava.security.egd=file:/dev/./urandom</jvmFlag>
                                     <jvmFlag>-Duser.timezone=Europe/Prague</jvmFlag>
                                     <jvmFlag>-Xtune:virtualized</jvmFlag>
                                 </jvmFlags>
