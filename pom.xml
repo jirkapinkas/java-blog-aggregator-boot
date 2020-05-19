@@ -246,7 +246,6 @@
                                     <jvmFlag>-Djava.security.egd=file:/dev/./urandom</jvmFlag>
                                     <jvmFlag>-Duser.timezone=Europe/Prague</jvmFlag>
                                     <jvmFlag>-Xtune:virtualized</jvmFlag>
-                                    <jvmFlag>-XX:+CompactStrings</jvmFlag>
                                 </jvmFlags>
                                 <args>
                                     <arg>--spring.profiles.active=prod</arg>
