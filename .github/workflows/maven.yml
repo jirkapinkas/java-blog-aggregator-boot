@@ -14,10 +14,10 @@ jobs:
       with:
         java-version: 1.8
 
-    - name: Build JAR
+    - name: Build JAR (and JIB pushes docker image to github)
       run: mvn -B clean compile com.google.cloud.tools:jib-maven-plugin:2.2.0:build -P prod -Duser.timezone=CET -Djib.to.auth.username=jirkapinkas -Djib.to.auth.password=${{ secrets.GH_ACCESS_TOKEN }} --file pom.xml
 
-    - name: Docker stuff :-)
+    - name: Pull image from github and recreate Docker container
       uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.HOST }}
@@ -30,5 +30,9 @@ jobs:
           docker rm -v -f topjavablogs | true
           docker run --restart=always -d --name topjavablogs -p 127.0.0.1:8083:8080 -v /hosting/topjavablogs/application.properties:/application.properties --add-host=postgres:185.8.239.196 docker.pkg.github.com/jirkapinkas/java-blog-aggregator-boot/java-blog-aggregator:latest
     - name: Check sitemap
-      run: docker run jirkapinkas/sitemap_validator /check_sitemap/main.py -s "https://www.topjavablogs.com/sitemap.xml" -c 5
+      run: |
+        echo "Waiting for 10 seconds ..."
+        sleep 10
+        echo "... Done waiting"
+        docker run jirkapinkas/sitemap_validator /check_sitemap/main.py -s "https://www.topjavablogs.com/sitemap.xml" -c 5
 
