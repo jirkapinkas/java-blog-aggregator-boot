@@ -31,6 +31,8 @@ jobs:
           docker run --restart=always -d --name topjavablogs -p 127.0.0.1:8083:8080 -v /hosting/topjavablogs/application.properties:/application.properties --add-host=postgres:185.8.239.196 docker.pkg.github.com/jirkapinkas/java-blog-aggregator-boot/java-blog-aggregator:latest
     - name: Check sitemap
       run: |
-        docker run willwill/wait-for-it www.topjavablogs.com:443 -- echo "topjavablogs is up"
+        echo "Waiting for 60 seconds ..."
+        sleep 60
+        echo "... done waiting"
         docker run jirkapinkas/sitemap_validator /check_sitemap/main.py -s "https://www.topjavablogs.com/sitemap.xml" -c 5
 
