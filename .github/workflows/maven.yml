@@ -15,7 +15,7 @@ jobs:
         java-version: 1.8
 
     - name: Build JAR (and JIB pushes docker image to github)
-      run: mvn -B clean compile com.google.cloud.tools:jib-maven-plugin:2.2.0:build -P prod -Duser.timezone=CET -Djib.to.auth.username=jirkapinkas -Djib.to.auth.password=${{ secrets.GH_ACCESS_TOKEN }} --file pom.xml
+      run: mvn -B clean compile com.google.cloud.tools:jib-maven-plugin:2.4.0:build -P prod -Duser.timezone=CET -Djib.to.auth.username=jirkapinkas -Djib.to.auth.password=${{ secrets.GH_ACCESS_TOKEN }} --file pom.xml
 
     - name: Pull image from github and recreate Docker container
       uses: appleboy/ssh-action@master
