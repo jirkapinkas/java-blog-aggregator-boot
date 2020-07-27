@@ -16,7 +16,7 @@ public class MDCFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        MDC.put("trackingNumber", UUID.randomUUID().toString());
+        MDC.put("trackingNumber", UUID.randomUUID().toString().replace("-", ""));
         try {
             filterChain.doFilter(request, response);
         } finally {
