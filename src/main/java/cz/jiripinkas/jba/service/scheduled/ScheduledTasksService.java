@@ -129,15 +129,15 @@ public class ScheduledTasksService {
 					}
 				}
 			}
-		} catch (IOException e) {
-			throw new RuntimeException(e);
+		} catch (Throwable e) {
+			log.error("Couldn't reload items!", e);
 		} finally {
 			if(mvstore1 != null) {
 				mvstore1.close();
 			}
 			if(file1 != null) {
 				if(!file1.delete()) {
-					throw new RuntimeException("Unable to close file: " + file1);
+					throw new RuntimeException("Unable to close file: " + file1 + ", this shouldn't happen");
 				}
 			}
 			if(mvstore2 != null) {
@@ -145,7 +145,7 @@ public class ScheduledTasksService {
 			}
 			if(file2 != null) {
 				if(!file2.delete()) {
-					throw new RuntimeException("Unable to close file: " + file2);
+					throw new RuntimeException("Unable to close file: " + file2 + ", this shouldn't happen");
 				}
 			}
 		}
