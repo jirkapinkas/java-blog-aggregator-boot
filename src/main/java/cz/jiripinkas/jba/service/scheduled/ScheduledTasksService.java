@@ -17,6 +17,7 @@ import org.h2.mvstore.MVStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
@@ -66,6 +67,9 @@ public class ScheduledTasksService {
 
 	@Autowired
 	private AllCategoriesService allCategoriesService;
+
+	@Value("${facebook.token}")
+	private String facebookToken;
 
 	private void populateAllLinksMap(MVMap<String, Object> allLinksMap) {
 		List<String> allLinks = itemRepository.findAllLinks();
@@ -341,7 +345,7 @@ public class ScheduledTasksService {
 				} catch (Exception ex) {
 					log.error("Error retrieving twitter shares", ex);
 				}
-				String facebookSharesUrl = "https://graph.facebook.com/?id=" + itemDto.getLink();
+				String facebookSharesUrl = "https://graph.facebook.com/?id=" + itemDto.getLink() + "&access_token=" + facebookToken + "&fields=engagement";
 				try {
 					// To prevent "Application request limit reached" error
 					// https://stackoverflow.com/questions/14092989/facebook-api-4-application-request-limit-reached
