@@ -1,25 +1,25 @@
 package cz.jiripinkas.jba.service;
 
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-import org.junit.Before;
-import org.junit.Test;
-
-public class ItemServiceTest {
+class ItemServiceTest {
 
 	private ItemService itemService;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		itemService = new ItemService();
 	}
 
 	@Test
-	public void testIsTooOldOrYoung() {
+	void testIsTooOldOrYoung() {
 		assertFalse(itemService.isTooOldOrYoung(new Date()));
 		Calendar calendar1 = new GregorianCalendar();
 		calendar1.add(Calendar.MONTH, -5);

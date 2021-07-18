@@ -11,12 +11,12 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.protocol.HttpContext;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.IOException;
 import java.net.URI;
@@ -24,11 +24,10 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.*;
 
-@RunWith(MockitoJUnitRunner.class)
-public class RssServiceTest {
+@ExtendWith(MockitoExtension.class)
+class RssServiceTest {
 
 	private RssService rssService;
 
@@ -38,14 +37,14 @@ public class RssServiceTest {
 	@Mock
 	private CloseableHttpResponse httpResponse;
 
-	@Before
-	public void setUp() throws Exception {
+	@BeforeEach
+	void setUp() throws Exception {
 		rssService = new RssService();
 		rssService.setHttpClient(httpClient);
 	}
 
 	@Test
-	public void testGetItemsFileJavaVids() throws Exception {
+	void testGetItemsFileJavaVids() throws Exception {
 		mockHttpClient200Status();
 		List<Item> items = rssService.getItems("src/test/resources/test-rss/javavids.xml", true, null, new HashMap<String, Object>());
 		assertEquals(10, items.size());
@@ -57,7 +56,7 @@ public class RssServiceTest {
 	}
 
 	@Test
-	public void testGetItemsFileSpring() throws Exception {
+	void testGetItemsFileSpring() throws Exception {
 		mockHttpClient200Status();
 		List<Item> items = rssService.getItems("src/test/resources/test-rss/spring.xml", true, null, new HashMap<String, Object>());
 		assertEquals(20, items.size());
@@ -73,7 +72,7 @@ public class RssServiceTest {
 	}
 
 	@Test
-	public void testGetItemsFileHibernate() throws Exception {
+	void testGetItemsFileHibernate() throws Exception {
 		mockHttpClient200Status();
 		List<Item> items = rssService.getItems("src/test/resources/test-rss/hibernate.xml", true, null, new HashMap<String, Object>());
 		assertEquals(14, items.size());
@@ -89,7 +88,7 @@ public class RssServiceTest {
 	}
 
 	@Test
-	public void testPullLinks() {
+	void testPullLinks() {
 		String inputText = "Hibernate ORM 4.2.12.Final was just released! Please see the full changelog for more information: https://hibernate.atlassian.net/secure/ReleaseNote.jspa?projectId=10031&version=16350. "
 				+ "Maven Central: http://repo1.maven.org/maven2/org/hibernate/hibernate-core (should update in a couple of days) "
 				+ "SourceForge: www.sourceforge.net/projects/hibernate/files/hibernate4 "
@@ -105,7 +104,7 @@ public class RssServiceTest {
 	}
 
 	@Test
-	public void testCleanTitle() {
+	void testCleanTitle() {
 		assertEquals("test", rssService.cleanTitle("   test   "));
 		assertEquals("Pat & Mat", rssService.cleanTitle("Pat & Mat"));
 		assertEquals("bla bla", rssService.cleanTitle("[OmniFaces utilities 2.0] bla bla"));
@@ -117,7 +116,7 @@ public class RssServiceTest {
 	}
 
 	@Test
-	public void testGetRssDate() throws ParseException {
+	void testGetRssDate() throws ParseException {
 		assertEquals("Sun Mar 23 09:01:34 CET 2014", rssService.getRssDate("Sun, 23 Mar 2014 08:01:34 +0000").toString());
 		assertEquals("Sun Mar 23 00:00:00 CET 2014", rssService.getRssDate("Sun, 23 Mar 2014").toString());
 		assertEquals("Sun Mar 23 00:00:00 CET 2014", rssService.getRssDate("23 Mar 2014").toString());
@@ -133,13 +132,13 @@ public class RssServiceTest {
 	}
 
 	@Test
-	public void testFixDate() {
+	void testFixDate() {
 		String fixDate = rssService.fixDate("<guid>http://www.jsfcentral.com/listings/R221940</guid><pubDate>    25 Jan 2015 20:00:00 GMT   </pubDate><description>");
 		assertEquals("<guid>http://www.jsfcentral.com/listings/R221940</guid><pubDate>25 Jan 2015 20:00:00 GMT</pubDate><description>", fixDate);
 	}
 
 	@Test
-	public void testCleanDescription() {
+	void testCleanDescription() {
 		assertEquals(
 				"this is loooooooooooooooooooooooo ooooooooooooooooooooooooo ooooooong description loooooooooooooooooooooooo ooooooooong once more looooooooo...",
 				rssService
@@ -180,7 +179,7 @@ public class RssServiceTest {
 	}
 
 	@Test
-	public void testGetItemsFileInstanceofJavaPublishedDate() throws RssException, ClientProtocolException, IOException {
+	void testGetItemsFileInstanceofJavaPublishedDate() throws RssException, ClientProtocolException, IOException {
 		mockHttpClient200Status();
 		List<Item> items = rssService.getItems("src/test/resources/test-rss/instanceofjava.xml", true, null, new HashMap<String, Object>());
 		Item firstItem = items.get(0);
@@ -191,7 +190,7 @@ public class RssServiceTest {
 	}
 
 	@Test
-	public void testGetItemsFileBaeldungFeedburnerOrigLink() throws Exception {
+	void testGetItemsFileBaeldungFeedburnerOrigLink() throws Exception {
 		mockHttpClient200Status();
 		List<Item> items = rssService.getItems("src/test/resources/test-rss/baeldung.xml", true, null, new HashMap<String, Object>());
 		Item firstItem = items.get(0);
@@ -199,7 +198,7 @@ public class RssServiceTest {
 	}
 
 	@Test
-	public void testGetItemsFileReddit() throws Exception {
+	void testGetItemsFileReddit() throws Exception {
 		mockHttpClient200Status();
 		Blog blog = new Blog();
 		blog.setMinRedditUps(30);
@@ -211,7 +210,7 @@ public class RssServiceTest {
 	}
 
 	@Test
-	public void testRedirect() throws Exception {
+	void testRedirect() throws Exception {
 		@SuppressWarnings("resource")
 		CloseableHttpResponse closeableHttpResponse = Mockito.mock(CloseableHttpResponse.class);
 		HttpEntity httpEntity = Mockito.mock(HttpEntity.class);
@@ -226,7 +225,7 @@ public class RssServiceTest {
 		assertEquals("http://www.java-skoleni.cz/kurz/java", realLink);
 	}
 
-	public void test404() throws Exception {
+	void test404() throws Exception {
 		try {
 			mockHttpClientStatus(404);
 			rssService.getRealLink("http://www.java-skoleni.cz/xxxx", HttpClientContext.create());
@@ -252,28 +251,28 @@ public class RssServiceTest {
 	}
 
 	@Test
-	public void test200Ampersand() throws Exception {
+	void test200Ampersand() throws Exception {
 		mockHttpClient200Status();
 		String realLink = rssService.getRealLink("http://www.phoronix.com/scan.php?page=news_item&amp;px=LWJGL-Vulkan-Java", HttpClientContext.create());
 		assertEquals("http://www.phoronix.com/scan.php?page=news_item&px=LWJGL-Vulkan-Java", realLink);
 	}
 
 	@Test
-	public void test200() throws Exception {
+	void test200() throws Exception {
 		mockHttpClient200Status();
 		String realLink = rssService.getRealLink("http://www.java-skoleni.cz", HttpClientContext.create());
 		assertEquals("http://www.java-skoleni.cz", realLink);
 	}
 
 	@Test
-	public void testWhitespaces() throws Exception {
+	void testWhitespaces() throws Exception {
 		mockHttpClient200Status();
 		String realLink = rssService.getRealLink("   http://www.java-skoleni.cz   ", HttpClientContext.create());
 		assertEquals("http://www.java-skoleni.cz", realLink);
 	}
 
 	@Test
-	public void testAtomAlternate() throws Exception {
+	void testAtomAlternate() throws Exception {
 		mockHttpClient200Status();
 		List<Item> items = rssService.getItems("src/test/resources/test-rss/knitelius.xml", true, null, new HashMap<String, Object>());
 		Item firstItem = items.get(0);
@@ -281,14 +280,14 @@ public class RssServiceTest {
 	}
 
 	@Test
-	public void testDfetter() throws Exception {
+	void testDfetter() throws Exception {
 		mockHttpClient200Status();
 		List<Item> items = rssService.getItems("src/test/resources/test-rss/dfetter.xml", true, null, new HashMap<String, Object>());
 		assertEquals("What time was it? This is a question that may not always be easy to answer, even with the excellent TIMESTAMPTZ data type. While it stores t...", items.get(0).getDescription());
 	}
 	
 	@Test
-	public void testFixRealLink() {
+	void testFixRealLink() {
 		assertEquals("http://www.javaworld.com/article/3033916/open-source-tools/github-apologizes-for-ignoring-community-concerns.html", rssService.fixRealLink("http://www.javaworld.com/article/3033916/open-source-tools/github-apologizes-for-ignoring-community-concerns.html#tk.rss_all"));
 		assertEquals("https://dzone.com/articles/defensive-programming-via-validating-decorators", rssService.fixRealLink("https://dzone.com/articles/defensive-programming-via-validating-decorators?utm_medium=feed&utm_source=feedpress.me&utm_campaign=Feed%3A+dzone%2Fjava"));
 		assertEquals("http://www.infoq.com/articles/Easily-Create-Java-Agents-with-ByteBuddy", rssService.fixRealLink("http://www.infoq.com/articles/Easily-Create-Java-Agents-with-ByteBuddy?utm_campaign=infoq_content&utm_source=infoq&utm_medium=feed&utm_term=Java"));

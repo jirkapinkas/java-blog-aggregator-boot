@@ -1,29 +1,29 @@
 package cz.jiripinkas.jba.service;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 import java.util.Date;
 
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
-import static org.junit.Assert.*;
-
-public class BlogServiceTest {
+class BlogServiceTest {
 
 	private BlogService blogService;
 
-	@Before
-	public void setUp() throws Exception {
+	@BeforeEach
+	void setUp() throws Exception {
 		blogService = new BlogService();
 	}
 
 	@Test
-	public void testGetLastIndexDateMinutes() {
+	void testGetLastIndexDateMinutes() {
 		blogService.setLastIndexedDateFinish(new Date());
 		assertEquals(blogService.getLastIndexDateMinutes(), 0);
 	}
 
 	@Test
-	public void testGetLastIndexDateMinutesEmptyDateFinish() {
+	void testGetLastIndexDateMinutesEmptyDateFinish() {
 		assertEquals(blogService.getLastIndexDateMinutes(), 0);
 	}
 }
