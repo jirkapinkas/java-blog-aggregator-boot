@@ -28,7 +28,7 @@ jobs:
           docker pull docker.pkg.github.com/jirkapinkas/java-blog-aggregator-boot/java-blog-aggregator
           docker image prune -f
           docker rm -v -f topjavablogs | true
-          docker run --log-opt max-size=10m --log-opt max-file=10 --restart=always -d --name topjavablogs -p 127.0.0.1:8083:8080 -v /hosting/topjavablogs/application.properties:/application.properties --add-host=postgres:185.8.239.196 docker.pkg.github.com/jirkapinkas/java-blog-aggregator-boot/java-blog-aggregator:latest
+          docker run --log-opt max-size=10m --log-opt max-file=10 --restart=always -d --name topjavablogs -p 127.0.0.1:8083:8080 -v /hosting/topjavablogs/application.properties:/application.properties --add-host=postgres:31.31.79.193 docker.pkg.github.com/jirkapinkas/java-blog-aggregator-boot/java-blog-aggregator:latest
     - name: Check sitemap
       run: |
         echo "Waiting for 60 seconds ..."
