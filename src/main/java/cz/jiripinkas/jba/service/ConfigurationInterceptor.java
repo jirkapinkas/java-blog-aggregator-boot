@@ -1,18 +1,18 @@
 package cz.jiripinkas.jba.service;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.Profiles;
 import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.Random;
 
 @Component
-public class ConfigurationInterceptor extends HandlerInterceptorAdapter {
+public class ConfigurationInterceptor implements HandlerInterceptor {
 
 	@Autowired
 	private ConfigurationService configurationService;
@@ -32,6 +32,19 @@ public class ConfigurationInterceptor extends HandlerInterceptorAdapter {
 	@Autowired
 	private Environment environment;
 
+	public static String getRandomString() {
+		int leftLimit = 48; // numeral '0'
+		int rightLimit = 122; // letter 'z'
+		int targetStringLength = 30;
+		Random random = new Random();
+
+		return random.ints(leftLimit, rightLimit + 1)
+				.filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
+				.limit(targetStringLength)
+				.collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+				.toString();
+	}
+
 	@Override
 	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
 		/*
@@ -43,7 +56,7 @@ public class ConfigurationInterceptor extends HandlerInterceptorAdapter {
 			} else {
 				modelAndView.getModelMap().addAttribute("isDevProfileActive", false);
 			}
-			String adBlockClass = RandomStringUtils.randomAlphabetic(30);
+			String adBlockClass = getRandomString();
 			modelAndView.getModelMap().addAttribute("adBlockMessageClass", adBlockClass);
 			String adBlockCss = 
 					"		<style type=\"text/css\">\n" + 

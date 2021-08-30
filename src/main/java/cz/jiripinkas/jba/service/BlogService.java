@@ -8,7 +8,6 @@ import cz.jiripinkas.jba.repository.BlogRepository;
 import cz.jiripinkas.jba.repository.ItemRepository;
 import cz.jiripinkas.jba.repository.UserRepository;
 import cz.jiripinkas.jba.util.MyUtil;
-import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -169,7 +168,7 @@ public class BlogService {
 		} else {
 			byte[] icon = blog.get().getIcon();
 			if (icon == null) {
-				return IOUtils.toByteArray(getClass().getResourceAsStream("/generic-blog.png"));
+				return getClass().getResourceAsStream("/generic-blog.png").readAllBytes();
 			}
 			return icon;
 		}
