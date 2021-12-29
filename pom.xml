@@ -14,7 +14,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.5.5</version>
+        <version>2.6.2</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
@@ -78,7 +78,7 @@
         <dependency>
             <groupId>org.jsoup</groupId>
             <artifactId>jsoup</artifactId>
-            <version>1.14.2</version>
+            <version>1.14.3</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -229,7 +229,7 @@
                         <version>2.4.0</version>
                         <configuration>
                             <from>
-                                <image>adoptopenjdk/openjdk11-openj9:alpine-jre</image>
+                                <image>ibm-semeru-runtimes:open-17-jre</image>
                             </from>
                             <to>
                                 <image>docker.pkg.github.com/jirkapinkas/java-blog-aggregator-boot/java-blog-aggregator</image>
